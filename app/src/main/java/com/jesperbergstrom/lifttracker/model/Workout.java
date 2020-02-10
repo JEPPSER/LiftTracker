@@ -7,8 +7,8 @@ public class Workout {
     private String date;
     private ArrayList<Set> sets;
 
-    public Workout(String date) {
-        this.date = date;
+    public Workout() {
+        sets = new ArrayList<Set>();
     }
 
     public String getDate() {

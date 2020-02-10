@@ -9,6 +9,7 @@ public class Lift {
 
     public Lift(String name) {
         this.name = name;
+        workouts = new ArrayList<Workout>();
     }
 
     public String getName() {

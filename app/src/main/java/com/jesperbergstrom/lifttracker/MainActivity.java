@@ -2,8 +2,8 @@ package com.jesperbergstrom.lifttracker;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.graphics.drawable.GradientDrawable;
-import android.os.Build;
+import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.ContextMenu;
@@ -19,17 +19,20 @@ import androidx.annotation.NonNull;
 
 import com.jesperbergstrom.lifttracker.io.FileManager;
 import com.jesperbergstrom.lifttracker.model.Lift;
+import com.jesperbergstrom.lifttracker.view.LiftActivity;
 
 import java.util.ArrayList;
 
 public class MainActivity extends Activity {
 
-    private Button addBtn;
+    private Button addLiftBtn;
     private LinearLayout liftList;
 
     private ArrayList<Lift> lifts;
     private FileManager fileManager;
     private int selectedIndex;
+
+    private Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,8 +41,10 @@ public class MainActivity extends Activity {
 
         fileManager = new FileManager(getFilesDir());
 
-        addBtn = findViewById(R.id.addBtn);
+        addLiftBtn = findViewById(R.id.addLiftBtn);
         liftList = findViewById(R.id.liftList);
+
+        intent = new Intent(this, LiftActivity.class);
     }
 
     @Override
@@ -62,7 +67,7 @@ public class MainActivity extends Activity {
 
         loadLifts();
 
-        addBtn.setOnClickListener((view) -> {
+        addLiftBtn.setOnClickListener((view) -> {
             addLiftDialog();
         });
     }
@@ -91,7 +96,7 @@ public class MainActivity extends Activity {
         builder.setPositiveButton("OK", (dialog, which) -> {
             Lift lift = new Lift(input.getText().toString());
             lifts.add(lift);
-            fileManager.updateLiftFiles(lifts);
+            fileManager.updateAllLiftFiles(lifts);
             loadLifts();
         });
 
@@ -116,7 +121,7 @@ public class MainActivity extends Activity {
 
         builder.setPositiveButton("YES", (dialog, which) -> {
             lifts.remove(selectedIndex);
-            fileManager.updateLiftFiles(lifts);
+            fileManager.updateAllLiftFiles(lifts);
             loadLifts();
         });
 
@@ -128,7 +133,7 @@ public class MainActivity extends Activity {
     }
 
     private void loadLifts() {
-        lifts = fileManager.loadLiftFiles();
+        lifts = fileManager.loadAllLiftFiles();
         liftList.removeAllViews();
 
         // Add UI elements
@@ -138,23 +143,23 @@ public class MainActivity extends Activity {
             LinearLayout hbox = new LinearLayout(this);
             hbox.setOrientation(LinearLayout.HORIZONTAL);
             hbox.setPadding(30, 30, 30, 30);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            params.setMargins(0, 0, 0, 4);
+            hbox.setLayoutParams(params);
+            hbox.setBackgroundColor(Color.WHITE);
 
             // Text
             TextView tv = new TextView(this);
             tv.setText(l.getName());
             tv.setTextSize(30);
 
-            // Border for the container
-            GradientDrawable border = new GradientDrawable();
-            border.setColor(0xFFFFFFFF);
-            border.setStroke(1, 0xFF000000);
-            if(Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
-                hbox.setBackgroundDrawable(border);
-            } else {
-                hbox.setBackground(border);
-            }
-
             this.registerForContextMenu(hbox);
+
+            hbox.setOnClickListener((view) -> {
+                intent.putExtra("name", l.getName());
+                startActivity(intent);
+            });
+
             hbox.addView(tv);
             liftList.addView(hbox);
         }

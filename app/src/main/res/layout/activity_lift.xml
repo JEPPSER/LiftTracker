@@ -17,8 +17,25 @@
             android:padding="30px"
             android:background="#406060">
 
+
+            <TextView
+                android:id="@+id/liftText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:text="Dips"
+                android:textColor="#FFF"
+                android:textSize="80px" />
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+            </FrameLayout>
+
             <Button
-                android:id="@+id/addLiftBtn"
+                android:id="@+id/addWorkoutBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0"
@@ -33,7 +50,7 @@
             android:background="#DDDDDD">
 
             <LinearLayout
-                android:id="@+id/liftList"
+                android:id="@+id/workoutList"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
