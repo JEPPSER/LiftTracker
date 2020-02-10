@@ -21,6 +21,10 @@ public class FileManager {
     }
 
     public void updateLiftFiles(ArrayList<Lift> lifts) {
+        for (File f : dir.listFiles()) {
+            f.delete();
+        }
+
         for (Lift l : lifts) {
             try {
                 FileWriter fw = new FileWriter(dir.getAbsolutePath() + "/" + l.getName() + ".txt");

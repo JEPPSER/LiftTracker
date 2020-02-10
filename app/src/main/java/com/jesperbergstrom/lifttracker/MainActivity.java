@@ -6,10 +6,16 @@ import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.InputType;
+import android.view.ContextMenu;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 
 import com.jesperbergstrom.lifttracker.io.FileManager;
 import com.jesperbergstrom.lifttracker.model.Lift;
@@ -23,6 +29,7 @@ public class MainActivity extends Activity {
 
     private ArrayList<Lift> lifts;
     private FileManager fileManager;
+    private int selectedIndex;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +43,20 @@ public class MainActivity extends Activity {
     }
 
     @Override
+    public boolean onContextItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.remove:
+                removeDialog();
+                return true;
+            case R.id.change:
+                Toast.makeText(this, "Change", Toast.LENGTH_SHORT).show();
+                return true;
+            default:
+                return super.onContextItemSelected(item);
+        }
+    }
+
+    @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
 
@@ -44,6 +65,14 @@ public class MainActivity extends Activity {
         addBtn.setOnClickListener((view) -> {
             addLiftDialog();
         });
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+
+        selectedIndex = liftList.indexOfChild(v);
+        getMenuInflater().inflate(R.menu.lift_menu, menu);
     }
 
     private void addLiftDialog() {
@@ -67,6 +96,31 @@ public class MainActivity extends Activity {
         });
 
         builder.setNegativeButton("Cancel", (dialog, which) -> {
+            dialog.cancel();
+        });
+
+        builder.show();
+    }
+
+    private void removeDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Warning!");
+        TextView text = new TextView(this);
+        text.setText("Do you want to remove this lift?");
+
+        LinearLayout l = new LinearLayout(this);
+        l.setPadding(60, 60, 60, 0);
+        l.addView(text);
+
+        builder.setView(l);
+
+        builder.setPositiveButton("YES", (dialog, which) -> {
+            lifts.remove(selectedIndex);
+            fileManager.updateLiftFiles(lifts);
+            loadLifts();
+        });
+
+        builder.setNegativeButton("NO", (dialog, which) -> {
             dialog.cancel();
         });
 
@@ -100,6 +154,7 @@ public class MainActivity extends Activity {
                 hbox.setBackground(border);
             }
 
+            this.registerForContextMenu(hbox);
             hbox.addView(tv);
             liftList.addView(hbox);
         }
