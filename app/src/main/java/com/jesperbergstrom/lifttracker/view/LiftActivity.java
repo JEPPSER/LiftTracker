@@ -153,12 +153,12 @@ public class LiftActivity extends Activity {
 
             this.registerForContextMenu(hbox);
 
-            /*this.registerForContextMenu(hbox);
-
             hbox.setOnClickListener((view) -> {
-                intent.putExtra("name", l.getName());
+                Intent intent = new Intent(this, WorkoutActivity.class);
+                intent.putExtra("name", liftName);
+                intent.putExtra("date", w.getDate());
                 startActivity(intent);
-            });*/
+            });
 
             hbox.addView(tv);
             workoutList.addView(hbox);
