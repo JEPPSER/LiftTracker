@@ -6,11 +6,17 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.InputType;
+import android.view.ContextMenu;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 
 import com.jesperbergstrom.lifttracker.R;
 import com.jesperbergstrom.lifttracker.io.FileManager;
@@ -58,6 +64,50 @@ public class WorkoutActivity extends Activity {
         addSetButton.setOnClickListener((view) -> {
             addSetDialog();
         });
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+
+        selectedIndex = setList.indexOfChild(v);
+        getMenuInflater().inflate(R.menu.set_menu, menu);
+    }
+
+    @Override
+    public boolean onContextItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.removeSet:
+                removeDialog();
+                return true;
+            default:
+                return super.onContextItemSelected(item);
+        }
+    }
+
+    private void removeDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Warning!");
+        TextView text = new TextView(this);
+        text.setText("Do you want to remove this set?");
+
+        LinearLayout l = new LinearLayout(this);
+        l.setPadding(60, 60, 60, 0);
+        l.addView(text);
+
+        builder.setView(l);
+
+        builder.setPositiveButton("YES", (dialog, which) -> {
+            getWorkout(liftName, date).getSets().remove(selectedIndex);
+            fileManager.updateAllLiftFiles(lifts);
+            loadSets();
+        });
+
+        builder.setNegativeButton("NO", (dialog, which) -> {
+            dialog.cancel();
+        });
+
+        builder.show();
     }
 
     private void addSetDialog() {
@@ -122,8 +172,10 @@ public class WorkoutActivity extends Activity {
 
             // Text
             TextView tv = new TextView(this);
-            tv.setText(s.getWeight() + "x" + s.getReps());
+            tv.setText(s.getWeight() + "kg x " + s.getReps());
             tv.setTextSize(30);
+
+            this.registerForContextMenu(hbox);
 
             //this.registerForContextMenu(hbox);
 
