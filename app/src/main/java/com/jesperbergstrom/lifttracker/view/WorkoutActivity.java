@@ -63,24 +63,38 @@ public class WorkoutActivity extends Activity {
     private void addSetDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-        final EditText weight = new EditText(this);
+        EditText weight = new EditText(this);
         weight.setWidth(400);
         weight.setInputType(InputType.TYPE_CLASS_NUMBER);
         TextView weightText = new TextView(this);
         weightText.setText("Weight: ");
+        LinearLayout l1 = new LinearLayout(this);
+        l1.setPadding(60, 0, 60, 0);
+        l1.addView(weightText);
+        l1.addView(weight);
 
-        LinearLayout l = new LinearLayout(this);
-        l.setPadding(60, 0, 60, 0);
-        l.addView(weightText);
-        l.addView(weight);
+        EditText reps = new EditText(this);
+        reps.setWidth(400);
+        reps.setInputType(InputType.TYPE_CLASS_NUMBER);
+        TextView repsText = new TextView(this);
+        repsText.setText("Reps:    ");
+        LinearLayout l2 = new LinearLayout(this);
+        l2.setPadding(60, 0, 60, 0);
+        l2.addView(repsText);
+        l2.addView(reps);
 
-        builder.setView(l);
+        LinearLayout vbox = new LinearLayout(this);
+        vbox.setOrientation(LinearLayout.VERTICAL);
+        vbox.addView(l1);
+        vbox.addView(l2);
+
+        builder.setView(vbox);
 
         builder.setPositiveButton("OK", (dialog, which) -> {
-            /*Lift lift = new Lift(input.getText().toString());
-            lifts.add(lift);
+            Set set = new Set(Integer.parseInt(weight.getText().toString()), Integer.parseInt(reps.getText().toString()));
+            getWorkout(liftName, date).getSets().add(set);
             fileManager.updateAllLiftFiles(lifts);
-            loadLifts();*/
+            loadSets();
         });
 
         builder.setNegativeButton("Cancel", (dialog, which) -> {
