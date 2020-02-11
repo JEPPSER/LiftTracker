@@ -50,10 +50,10 @@ public class MainActivity extends Activity {
     @Override
     public boolean onContextItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.remove:
+            case R.id.removeLift:
                 removeDialog();
                 return true;
-            case R.id.change:
+            case R.id.changeLift:
                 Toast.makeText(this, "Change", Toast.LENGTH_SHORT).show();
                 return true;
             default:

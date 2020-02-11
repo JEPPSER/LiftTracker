@@ -2,10 +2,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/removeLift"
+        android:id="@+id/removeWorkout"
         android:title="Remove" />
 
     <item
-        android:id="@+id/changeLift"
-        android:title="Change name" />
+        android:id="@+id/changeWorkout"
+        android:title="Change date" />
 </menu>

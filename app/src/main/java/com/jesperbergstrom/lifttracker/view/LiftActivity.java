@@ -5,10 +5,16 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.ContextMenu;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 
 import com.jesperbergstrom.lifttracker.R;
 import com.jesperbergstrom.lifttracker.io.FileManager;
@@ -55,6 +61,53 @@ public class LiftActivity extends Activity {
         });
     }
 
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+
+        selectedIndex = workoutList.indexOfChild(v);
+        getMenuInflater().inflate(R.menu.workout_menu, menu);
+    }
+
+    @Override
+    public boolean onContextItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.removeWorkout:
+                removeDialog();
+                return true;
+            case R.id.changeWorkout:
+                Toast.makeText(this, "Change", Toast.LENGTH_SHORT).show();
+                return true;
+            default:
+                return super.onContextItemSelected(item);
+        }
+    }
+
+    private void removeDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Warning!");
+        TextView text = new TextView(this);
+        text.setText("Do you want to remove this workout?");
+
+        LinearLayout l = new LinearLayout(this);
+        l.setPadding(60, 60, 60, 0);
+        l.addView(text);
+
+        builder.setView(l);
+
+        builder.setPositiveButton("YES", (dialog, which) -> {
+            getLift(liftName).getWorkouts().remove(selectedIndex);
+            fileManager.updateAllLiftFiles(lifts);
+            loadWorkouts();
+        });
+
+        builder.setNegativeButton("NO", (dialog, which) -> {
+            dialog.cancel();
+        });
+
+        builder.show();
+    }
+
     private void addWorkoutDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
@@ -97,6 +150,8 @@ public class LiftActivity extends Activity {
             TextView tv = new TextView(this);
             tv.setText(w.getDate());
             tv.setTextSize(30);
+
+            this.registerForContextMenu(hbox);
 
             /*this.registerForContextMenu(hbox);
 
