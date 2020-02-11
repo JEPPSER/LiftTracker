@@ -14,8 +14,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:padding="30px"
-            android:background="#406060">
+            android:padding="40px"
+            android:background="#151515">
 
 
             <TextView
@@ -47,7 +47,7 @@
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#DDDDDD">
+            android:background="#303030">
 
             <LinearLayout
                 android:id="@+id/setList"

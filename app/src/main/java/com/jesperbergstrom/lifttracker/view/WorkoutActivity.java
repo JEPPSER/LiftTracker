@@ -168,23 +168,15 @@ public class WorkoutActivity extends Activity {
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             params.setMargins(0, 0, 0, 4);
             hbox.setLayoutParams(params);
-            hbox.setBackgroundColor(Color.WHITE);
+            hbox.setBackgroundColor(Color.parseColor("#202020"));
 
             // Text
             TextView tv = new TextView(this);
             tv.setText(s.getWeight() + "kg x " + s.getReps());
             tv.setTextSize(30);
+            tv.setTextColor(Color.WHITE);
 
             this.registerForContextMenu(hbox);
-
-            //this.registerForContextMenu(hbox);
-
-            /*hbox.setOnClickListener((view) -> {
-                Intent intent = new Intent(this, WorkoutActivity.class);
-                intent.putExtra("name", liftName);
-                intent.putExtra("date", w.getDate());
-                startActivity(intent);
-            });*/
 
             hbox.addView(tv);
             setList.addView(hbox);

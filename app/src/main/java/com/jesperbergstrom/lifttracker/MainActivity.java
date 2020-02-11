@@ -146,12 +146,13 @@ public class MainActivity extends Activity {
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             params.setMargins(0, 0, 0, 4);
             hbox.setLayoutParams(params);
-            hbox.setBackgroundColor(Color.WHITE);
+            hbox.setBackgroundColor(Color.parseColor("#202020"));
 
             // Text
             TextView tv = new TextView(this);
             tv.setText(l.getName());
             tv.setTextSize(30);
+            tv.setTextColor(Color.WHITE);
 
             this.registerForContextMenu(hbox);
 

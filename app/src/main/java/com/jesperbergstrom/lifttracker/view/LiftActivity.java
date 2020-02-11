@@ -19,6 +19,7 @@ import androidx.annotation.NonNull;
 import com.jesperbergstrom.lifttracker.R;
 import com.jesperbergstrom.lifttracker.io.FileManager;
 import com.jesperbergstrom.lifttracker.model.Lift;
+import com.jesperbergstrom.lifttracker.model.Set;
 import com.jesperbergstrom.lifttracker.model.Workout;
 
 import java.util.ArrayList;
@@ -144,12 +145,27 @@ public class LiftActivity extends Activity {
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             params.setMargins(0, 0, 0, 4);
             hbox.setLayoutParams(params);
-            hbox.setBackgroundColor(Color.WHITE);
+            hbox.setBackgroundColor(Color.parseColor("#202020"));
+
+            // Generate "thumbnail" string
+            String thumbnail = "";
+            if (w.getSets().size() > 0) {
+                Set show = w.getSets().get(0);
+                for (Set s : w.getSets()) {
+                    if (s.getWeight() > show.getWeight()) {
+                        show = s;
+                    } else if (s.getWeight() == show.getWeight() && s.getReps() > show.getReps()) {
+                        show = s;
+                    }
+                }
+                thumbnail = "(" + show.getWeight() + "kg x " + show.getReps() + ")";
+            }
 
             // Text
             TextView tv = new TextView(this);
-            tv.setText(w.getDate());
+            tv.setText(w.getDate() + ": " + thumbnail);
             tv.setTextSize(30);
+            tv.setTextColor(Color.WHITE);
 
             this.registerForContextMenu(hbox);
 
