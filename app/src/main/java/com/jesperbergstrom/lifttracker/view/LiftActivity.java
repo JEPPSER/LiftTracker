@@ -77,11 +77,32 @@ public class LiftActivity extends Activity {
                 removeDialog();
                 return true;
             case R.id.changeWorkout:
-                Toast.makeText(this, "Change", Toast.LENGTH_SHORT).show();
+                changeDialog();
                 return true;
             default:
                 return super.onContextItemSelected(item);
         }
+    }
+
+    private void changeDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        DatePicker datePicker = new DatePicker(this);
+
+        builder.setView(datePicker);
+
+        builder.setPositiveButton("OK", (dialog, which) -> {
+            Workout w = getLift(liftName).getWorkouts().get(selectedIndex);
+            w.setDate(datePicker.getYear() + "-" + datePicker.getMonth() + "-" + datePicker.getDayOfMonth());
+            fileManager.updateAllLiftFiles(lifts);
+            loadWorkouts();
+        });
+
+        builder.setNegativeButton("Cancel", (dialog, which) -> {
+            dialog.cancel();
+        });
+
+        builder.show();
     }
 
     private void removeDialog() {
