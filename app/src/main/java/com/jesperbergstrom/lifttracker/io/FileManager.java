@@ -76,7 +76,7 @@ public class FileManager {
                     String[] sets = line[1].split(",");
                     for (String s : sets) {
                         String[] parts = s.split("x");
-                        Set set = new Set(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]));
+                        Set set = new Set(Float.parseFloat(parts[0]), Integer.parseInt(parts[1]));
                         w.getSets().add(set);
                     }
                 }

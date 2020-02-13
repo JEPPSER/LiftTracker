@@ -3,9 +3,9 @@ package com.jesperbergstrom.lifttracker.model;
 public class Set {
 
     private int reps;
-    private int weight;
+    private float weight;
 
-    public Set(int weight, int reps) {
+    public Set(float weight, int reps) {
         this.reps = reps;
         this.weight = weight;
     }
@@ -18,11 +18,11 @@ public class Set {
         this.reps = reps;
     }
 
-    public int getWeight() {
+    public float getWeight() {
         return weight;
     }
 
-    public void setWeight(int weight) {
+    public void setWeight(float weight) {
         this.weight = weight;
     }
 }

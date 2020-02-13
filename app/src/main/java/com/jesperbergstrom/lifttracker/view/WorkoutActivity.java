@@ -115,7 +115,7 @@ public class WorkoutActivity extends Activity {
 
         EditText weight = new EditText(this);
         weight.setWidth(400);
-        weight.setInputType(InputType.TYPE_CLASS_NUMBER);
+        weight.setRawInputType(InputType.TYPE_CLASS_NUMBER);
         TextView weightText = new TextView(this);
         weightText.setText("Weight: ");
         LinearLayout l1 = new LinearLayout(this);
@@ -141,7 +141,7 @@ public class WorkoutActivity extends Activity {
         builder.setView(vbox);
 
         builder.setPositiveButton("OK", (dialog, which) -> {
-            Set set = new Set(Integer.parseInt(weight.getText().toString()), Integer.parseInt(reps.getText().toString()));
+            Set set = new Set(Float.parseFloat(weight.getText().toString()), Integer.parseInt(reps.getText().toString()));
             getWorkout(liftName, date).getSets().add(set);
             fileManager.updateAllLiftFiles(lifts);
             loadSets();
