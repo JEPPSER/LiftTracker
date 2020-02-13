@@ -54,7 +54,7 @@ public class MainActivity extends Activity {
                 removeDialog();
                 return true;
             case R.id.changeLift:
-                Toast.makeText(this, "Change", Toast.LENGTH_SHORT).show();
+                changeDialog();
                 return true;
             default:
                 return super.onContextItemSelected(item);
@@ -78,6 +78,32 @@ public class MainActivity extends Activity {
 
         selectedIndex = liftList.indexOfChild(v);
         getMenuInflater().inflate(R.menu.lift_menu, menu);
+    }
+
+    private void changeDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("New name:");
+
+        final EditText input = new EditText(this);
+        input.setWidth(400);
+        input.setInputType(InputType.TYPE_CLASS_TEXT);
+        LinearLayout l = new LinearLayout(this);
+        l.setPadding(60, 0, 60, 0);
+        l.addView(input);
+
+        builder.setView(l);
+
+        builder.setPositiveButton("OK", (dialog, which) -> {
+            lifts.get(selectedIndex).setName(input.getText().toString());
+            fileManager.updateAllLiftFiles(lifts);
+            loadLifts();
+        });
+
+        builder.setNegativeButton("Cancel", (dialog, which) -> {
+            dialog.cancel();
+        });
+
+        builder.show();
     }
 
     private void addLiftDialog() {
