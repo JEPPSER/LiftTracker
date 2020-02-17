@@ -43,19 +43,20 @@
         </LinearLayout>
 
 
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#1db995"
+            app:tabMode="scrollable">
+        </com.google.android.material.tabs.TabLayout>
 
-        <ScrollView
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/viewPager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#303030">
+            app:layout_constraintTop_toBottomOf="@+id/tabLayout"
+            tools:layout_editor_absoluteX="8dp" />
 
-            <LinearLayout
-                android:id="@+id/workoutList"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-            </LinearLayout>
-        </ScrollView>
     </LinearLayout>
 </FrameLayout>

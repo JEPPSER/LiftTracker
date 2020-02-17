@@ -67,9 +67,6 @@ public class FileManager {
 
             while (scan.hasNext()) {
                 String[] line = scan.nextLine().split(":");
-                if (line.length == 2) {
-                    line = new String[] { line[0], "-1", line[1] };
-                }
                 String date = line[0];
 
                 Workout w = new Workout();
@@ -78,6 +75,7 @@ public class FileManager {
 
                 if (line.length > 2) {
                     String[] sets = line[2].split(",");
+                    System.out.println(line[2]);
                     for (String s : sets) {
                         String[] parts = s.split("x");
                         Set set = new Set(Float.parseFloat(parts[0]), Integer.parseInt(parts[1]));

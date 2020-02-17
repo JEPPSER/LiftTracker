@@ -15,20 +15,26 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager.widget.ViewPager;
 
+import com.google.android.material.tabs.TabLayout;
 import com.jesperbergstrom.lifttracker.R;
 import com.jesperbergstrom.lifttracker.io.FileManager;
 import com.jesperbergstrom.lifttracker.model.Lift;
 import com.jesperbergstrom.lifttracker.model.Set;
 import com.jesperbergstrom.lifttracker.model.Workout;
+import com.jesperbergstrom.lifttracker.view.fragment.LiftFragmentAdapter;
 
 import java.util.ArrayList;
 
-public class LiftActivity extends Activity {
+public class LiftActivity extends AppCompatActivity {
 
     private LinearLayout workoutList;
     private Button addWorkoutButton;
     private TextView liftText;
+    private TabLayout tabLayout;
+    private ViewPager viewPager;
 
     private ArrayList<Lift> lifts;
     private FileManager fileManager;
@@ -38,13 +44,42 @@ public class LiftActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getSupportActionBar().hide();
         setContentView(R.layout.activity_lift);
 
         fileManager = new FileManager(getFilesDir());
 
-        workoutList = findViewById(R.id.workoutList);
         addWorkoutButton = findViewById(R.id.addWorkoutBtn);
         liftText = findViewById(R.id.liftText);
+        tabLayout = findViewById(R.id.tabLayout);
+        viewPager = findViewById(R.id.viewPager);
+
+        tabLayout.addTab(tabLayout.newTab().setText("Workouts"));
+        tabLayout.addTab(tabLayout.newTab().setText("Stats"));
+        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+
+        final LiftFragmentAdapter adapter = new LiftFragmentAdapter(this, this.getSupportFragmentManager(), tabLayout.getTabCount());
+        viewPager.setAdapter(adapter);
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());
+                if (tab.getPosition() == 0) {
+                    workoutList = findViewById(R.id.workoutList);
+                    loadWorkouts();
+                }
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+            }
+        });
 
         Intent intent = getIntent();
         liftName = intent.getStringExtra("name");
@@ -55,6 +90,7 @@ public class LiftActivity extends Activity {
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
 
+        workoutList = findViewById(R.id.workoutList);
         loadWorkouts();
 
         addWorkoutButton.setOnClickListener((view) -> {
@@ -153,6 +189,10 @@ public class LiftActivity extends Activity {
     }
 
     private void loadWorkouts() {
+        if (workoutList == null) {
+            return;
+        }
+
         lifts = fileManager.loadAllLiftFiles();
 
         ArrayList<Workout> workouts = getLift(liftName).getWorkouts();
