@@ -170,7 +170,7 @@ public class LiftActivity extends Activity {
 
             // Generate "thumbnail" string
             String thumbnail = "";
-            if (w.getSets().size() > 0) {
+            if (w.getSets().size() > 0 && w.getDisplayIndex() == -1) {
                 Set show = w.getSets().get(0);
                 for (Set s : w.getSets()) {
                     if (s.getWeight() > show.getWeight()) {
@@ -179,6 +179,9 @@ public class LiftActivity extends Activity {
                         show = s;
                     }
                 }
+                thumbnail = "(" + show.getWeight() + "kg x " + show.getReps() + ")";
+            } else if (w.getDisplayIndex() != -1) {
+                Set show = w.getSets().get(w.getDisplayIndex());
                 thumbnail = "(" + show.getWeight() + "kg x " + show.getReps() + ")";
             }
 

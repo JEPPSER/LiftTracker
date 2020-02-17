@@ -4,4 +4,8 @@
     <item
         android:id="@+id/removeSet"
         android:title="Remove" />
+
+    <item
+        android:id="@+id/displaySet"
+        android:title="Set as display set" />
 </menu>

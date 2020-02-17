@@ -6,6 +6,7 @@ public class Workout {
 
     private String date;
     private ArrayList<Set> sets;
+    private int displayIndex = -1;
 
     public Workout() {
         sets = new ArrayList<Set>();
@@ -26,4 +27,8 @@ public class Workout {
     public void setSets(ArrayList<Set> sets) {
         this.sets = sets;
     }
+
+    public int getDisplayIndex() { return displayIndex; }
+
+    public void setDisplayIndex(int displayIndex) { this.displayIndex = displayIndex; }
 }

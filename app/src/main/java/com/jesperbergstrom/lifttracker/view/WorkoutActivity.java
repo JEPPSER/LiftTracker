@@ -10,11 +10,9 @@ import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -80,6 +78,11 @@ public class WorkoutActivity extends Activity {
             case R.id.removeSet:
                 removeDialog();
                 return true;
+            case R.id.displaySet:
+                getWorkout(liftName, date).setDisplayIndex(selectedIndex);
+                fileManager.updateAllLiftFiles(lifts);
+                loadSets();
+                return true;
             default:
                 return super.onContextItemSelected(item);
         }
@@ -98,7 +101,9 @@ public class WorkoutActivity extends Activity {
         builder.setView(l);
 
         builder.setPositiveButton("YES", (dialog, which) -> {
-            getWorkout(liftName, date).getSets().remove(selectedIndex);
+            Workout w = getWorkout(liftName, date);
+            w.getSets().remove(selectedIndex);
+            w.setDisplayIndex(-1);
             fileManager.updateAllLiftFiles(lifts);
             loadSets();
         });
@@ -157,8 +162,11 @@ public class WorkoutActivity extends Activity {
     private void loadSets() {
         lifts = fileManager.loadAllLiftFiles();
 
-        ArrayList<Set> sets = getWorkout(liftName, date).getSets();
+        Workout w = getWorkout(liftName, date);
+        ArrayList<Set> sets = w.getSets();
         setList.removeAllViews();
+
+        int i = 0;
 
         for (Set s : sets) {
             // Container for the workout
@@ -172,7 +180,11 @@ public class WorkoutActivity extends Activity {
 
             // Text
             TextView tv = new TextView(this);
-            tv.setText(s.getWeight() + "kg x " + s.getReps());
+            String text = s.getWeight() + "kg x " + s.getReps();
+            if (i == w.getDisplayIndex()) {
+                text += " (display)";
+            }
+            tv.setText(text);
             tv.setTextSize(30);
             tv.setTextColor(Color.WHITE);
 
@@ -180,6 +192,7 @@ public class WorkoutActivity extends Activity {
 
             hbox.addView(tv);
             setList.addView(hbox);
+            i++;
         }
     }
 

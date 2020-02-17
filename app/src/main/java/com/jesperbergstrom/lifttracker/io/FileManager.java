@@ -35,7 +35,7 @@ public class FileManager {
                 BufferedWriter bw = new BufferedWriter(fw);
 
                 for (Workout w : l.getWorkouts()) {
-                    bw.write(w.getDate() + ":");
+                    bw.write(w.getDate() + ":" + w.getDisplayIndex() + ":");
                     for (Set s : w.getSets()) {
                         bw.write(s.getWeight() + "x" + s.getReps() + ",");
                     }
@@ -67,13 +67,17 @@ public class FileManager {
 
             while (scan.hasNext()) {
                 String[] line = scan.nextLine().split(":");
+                if (line.length == 2) {
+                    line = new String[] { line[0], "-1", line[1] };
+                }
                 String date = line[0];
 
                 Workout w = new Workout();
                 w.setDate(date);
+                w.setDisplayIndex(Integer.parseInt(line[1]));
 
-                if (line.length > 1) {
-                    String[] sets = line[1].split(",");
+                if (line.length > 2) {
+                    String[] sets = line[2].split(",");
                     for (String s : sets) {
                         String[] parts = s.split("x");
                         Set set = new Set(Float.parseFloat(parts[0]), Integer.parseInt(parts[1]));
