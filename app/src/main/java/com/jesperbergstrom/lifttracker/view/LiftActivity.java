@@ -93,7 +93,7 @@ public class LiftActivity extends Activity {
 
         builder.setPositiveButton("OK", (dialog, which) -> {
             Workout w = getLift(liftName).getWorkouts().get(selectedIndex);
-            w.setDate(datePicker.getYear() + "-" + datePicker.getMonth() + "-" + datePicker.getDayOfMonth());
+            w.setDate(dateToString(datePicker.getYear(), datePicker.getMonth(), datePicker.getDayOfMonth()));
             fileManager.updateAllLiftFiles(lifts);
             loadWorkouts();
         });
@@ -139,7 +139,7 @@ public class LiftActivity extends Activity {
 
         builder.setPositiveButton("OK", (dialog, which) -> {
             Workout w = new Workout();
-            w.setDate(datePicker.getYear() + "-" + datePicker.getMonth() + "-" + datePicker.getDayOfMonth());
+            w.setDate(dateToString(datePicker.getYear(), datePicker.getMonth(), datePicker.getDayOfMonth()));
             getLift(liftName).getWorkouts().add(w);
             fileManager.updateAllLiftFiles(lifts);
             loadWorkouts();
@@ -185,7 +185,7 @@ public class LiftActivity extends Activity {
             // Text
             TextView tv = new TextView(this);
             tv.setText(w.getDate() + ": " + thumbnail);
-            tv.setTextSize(30);
+            tv.setTextSize(20);
             tv.setTextColor(Color.WHITE);
 
             this.registerForContextMenu(hbox);
@@ -200,6 +200,18 @@ public class LiftActivity extends Activity {
             hbox.addView(tv);
             workoutList.addView(hbox);
         }
+    }
+
+    private String dateToString(int year, int month, int day) {
+        String sM = String.valueOf(month + 1);
+        if (month < 9) {
+            sM = "0" + (month + 1);
+        }
+        String sD = String.valueOf(day);
+        if (day < 10) {
+            sD = "0" + day;
+        }
+        return year + "-" + sM + "-" + sD;
     }
 
     private Lift getLift(String name) {
