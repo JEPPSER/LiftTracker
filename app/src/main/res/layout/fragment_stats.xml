@@ -3,10 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#303030"
     tools:context=".view.fragment.StatsFragment">
 
     <com.jesperbergstrom.lifttracker.view.graphs.ScatterPlotView
-        android:layout_height="match_parent"
-        android:layout_width="match_parent"/>
+        android:id="@+id/scatterPlot"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
 </FrameLayout>

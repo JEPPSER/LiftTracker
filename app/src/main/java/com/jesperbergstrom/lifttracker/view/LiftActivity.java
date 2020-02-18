@@ -1,6 +1,5 @@
 package com.jesperbergstrom.lifttracker.view;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Color;
@@ -12,7 +11,6 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,12 +23,14 @@ import com.jesperbergstrom.lifttracker.model.Lift;
 import com.jesperbergstrom.lifttracker.model.Set;
 import com.jesperbergstrom.lifttracker.model.Workout;
 import com.jesperbergstrom.lifttracker.view.fragment.LiftFragmentAdapter;
-import com.jesperbergstrom.lifttracker.view.graphs.OpenGLView;
+import com.jesperbergstrom.lifttracker.view.graphs.PlotPoint;
+import com.jesperbergstrom.lifttracker.view.graphs.ScatterPlotView;
 
 import java.util.ArrayList;
 
 public class LiftActivity extends AppCompatActivity {
 
+    private ScatterPlotView scatterPlot;
     private LinearLayout workoutList;
     private Button addWorkoutButton;
     private TextView liftText;
@@ -71,7 +71,8 @@ public class LiftActivity extends AppCompatActivity {
                     workoutList = findViewById(R.id.workoutList);
                     loadWorkouts();
                 } else if (tab.getPosition() == 1) {
-
+                    scatterPlot = findViewById(R.id.scatterPlot);
+                    loadGraphs();
                 }
             }
 
@@ -189,6 +190,30 @@ public class LiftActivity extends AppCompatActivity {
         });
 
         builder.show();
+    }
+
+    private void loadGraphs() {
+        if (scatterPlot == null) {
+            return;
+        }
+
+        lifts = fileManager.loadAllLiftFiles();
+
+        scatterPlot.getData().clear();
+
+        int i = 1;
+
+        for (Workout w : getLift(liftName).getWorkouts()) {
+            double volume = 0;
+            for (Set s : w.getSets()) {
+                volume += (s.getReps() * s.getWeight());
+            }
+            PlotPoint p = new PlotPoint(i, volume);
+            scatterPlot.getData().add(p);
+            i++;
+        }
+
+        scatterPlot.updatePlot();
     }
 
     private void loadWorkouts() {
