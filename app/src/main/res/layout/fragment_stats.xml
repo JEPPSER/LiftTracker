@@ -5,9 +5,8 @@
     android:layout_height="match_parent"
     tools:context=".view.fragment.StatsFragment">
 
-    <com.jesperbergstrom.lifttracker.view.graphs.OpenGLView
-        android:id="@+id/openGLView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+    <com.jesperbergstrom.lifttracker.view.graphs.ScatterPlotView
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"/>
 
 </FrameLayout>

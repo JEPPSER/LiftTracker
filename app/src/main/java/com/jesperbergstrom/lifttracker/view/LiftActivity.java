@@ -31,7 +31,6 @@ import java.util.ArrayList;
 
 public class LiftActivity extends AppCompatActivity {
 
-    private OpenGLView openGLView;
     private LinearLayout workoutList;
     private Button addWorkoutButton;
     private TextView liftText;
@@ -72,7 +71,7 @@ public class LiftActivity extends AppCompatActivity {
                     workoutList = findViewById(R.id.workoutList);
                     loadWorkouts();
                 } else if (tab.getPosition() == 1) {
-                    openGLView = findViewById(R.id.openGLView);
+
                 }
             }
 
