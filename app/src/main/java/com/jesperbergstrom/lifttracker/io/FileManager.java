@@ -75,7 +75,6 @@ public class FileManager {
 
                 if (line.length > 2) {
                     String[] sets = line[2].split(",");
-                    System.out.println(line[2]);
                     for (String s : sets) {
                         String[] parts = s.split("x");
                         Set set = new Set(Float.parseFloat(parts[0]), Integer.parseInt(parts[1]));

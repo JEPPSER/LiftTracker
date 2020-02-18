@@ -25,11 +25,13 @@ import com.jesperbergstrom.lifttracker.model.Lift;
 import com.jesperbergstrom.lifttracker.model.Set;
 import com.jesperbergstrom.lifttracker.model.Workout;
 import com.jesperbergstrom.lifttracker.view.fragment.LiftFragmentAdapter;
+import com.jesperbergstrom.lifttracker.view.graphs.OpenGLView;
 
 import java.util.ArrayList;
 
 public class LiftActivity extends AppCompatActivity {
 
+    private OpenGLView openGLView;
     private LinearLayout workoutList;
     private Button addWorkoutButton;
     private TextView liftText;
@@ -69,6 +71,8 @@ public class LiftActivity extends AppCompatActivity {
                 if (tab.getPosition() == 0) {
                     workoutList = findViewById(R.id.workoutList);
                     loadWorkouts();
+                } else if (tab.getPosition() == 1) {
+                    openGLView = findViewById(R.id.openGLView);
                 }
             }
 
