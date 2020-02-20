@@ -1,5 +1,6 @@
 package com.jesperbergstrom.lifttracker.io;
 
+import com.jesperbergstrom.lifttracker.model.Date;
 import com.jesperbergstrom.lifttracker.model.Lift;
 import com.jesperbergstrom.lifttracker.model.Set;
 import com.jesperbergstrom.lifttracker.model.Workout;
@@ -35,7 +36,7 @@ public class FileManager {
                 BufferedWriter bw = new BufferedWriter(fw);
 
                 for (Workout w : l.getWorkouts()) {
-                    bw.write(w.getDate() + ":" + w.getDisplayIndex() + ":");
+                    bw.write(w.getDate().toString() + ":" + w.getDisplayIndex() + ":");
                     for (Set s : w.getSets()) {
                         bw.write(s.getWeight() + "x" + s.getReps() + ",");
                     }
@@ -70,7 +71,7 @@ public class FileManager {
                 String date = line[0];
 
                 Workout w = new Workout();
-                w.setDate(date);
+                w.setDate(Date.parseDate(date));
                 w.setDisplayIndex(Integer.parseInt(line[1]));
 
                 if (line.length > 2) {

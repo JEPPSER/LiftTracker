@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Workout {
 
-    private String date;
+    private Date date;
     private ArrayList<Set> sets;
     private int displayIndex = -1;
 
@@ -12,11 +12,11 @@ public class Workout {
         sets = new ArrayList<Set>();
     }
 
-    public String getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 

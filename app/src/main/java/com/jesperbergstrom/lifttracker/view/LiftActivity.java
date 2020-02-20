@@ -19,6 +19,7 @@ import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.tabs.TabLayout;
 import com.jesperbergstrom.lifttracker.R;
 import com.jesperbergstrom.lifttracker.io.FileManager;
+import com.jesperbergstrom.lifttracker.model.Date;
 import com.jesperbergstrom.lifttracker.model.Lift;
 import com.jesperbergstrom.lifttracker.model.Set;
 import com.jesperbergstrom.lifttracker.model.Workout;
@@ -133,7 +134,7 @@ public class LiftActivity extends AppCompatActivity {
 
         builder.setPositiveButton("OK", (dialog, which) -> {
             Workout w = getLift(liftName).getWorkouts().get(selectedIndex);
-            w.setDate(dateToString(datePicker.getYear(), datePicker.getMonth(), datePicker.getDayOfMonth()));
+            w.setDate(new Date(datePicker.getYear(), datePicker.getMonth() + 1, datePicker.getDayOfMonth()));
             fileManager.updateAllLiftFiles(lifts);
             loadWorkouts();
         });
@@ -179,7 +180,7 @@ public class LiftActivity extends AppCompatActivity {
 
         builder.setPositiveButton("OK", (dialog, which) -> {
             Workout w = new Workout();
-            w.setDate(dateToString(datePicker.getYear(), datePicker.getMonth(), datePicker.getDayOfMonth()));
+            w.setDate(new Date(datePicker.getYear(), datePicker.getMonth() + 1, datePicker.getDayOfMonth()));
             getLift(liftName).getWorkouts().add(w);
             fileManager.updateAllLiftFiles(lifts);
             loadWorkouts();
@@ -208,7 +209,7 @@ public class LiftActivity extends AppCompatActivity {
             for (Set s : w.getSets()) {
                 volume += (s.getReps() * s.getWeight());
             }
-            PlotPoint p = new PlotPoint(i, volume);
+            PlotPoint p = new PlotPoint(w.getDate(), volume);
             scatterPlot.getData().add(p);
             i++;
         }
@@ -264,7 +265,7 @@ public class LiftActivity extends AppCompatActivity {
             hbox.setOnClickListener((view) -> {
                 Intent intent = new Intent(this, WorkoutActivity.class);
                 intent.putExtra("name", liftName);
-                intent.putExtra("date", w.getDate());
+                intent.putExtra("date", w.getDate().toString());
                 startActivity(intent);
             });
 

@@ -12,9 +12,10 @@ public class Axis {
     private double start;
     private double tickSpacing;
     private int numOfTicks;
+    private int tickSkip;
     private int orientation;
 
-    public Axis(ArrayList<PlotPoint> data, int orientation) {
+    public Axis(ArrayList<PlotPoint> data, int orientation, boolean fromZero) {
         this.orientation = orientation;
 
         if (data.isEmpty()) {
@@ -25,8 +26,8 @@ public class Axis {
             min = data.get(0).y;
             max = data.get(0).y;
         } else if (orientation == HORIZONTAL) {
-            min = data.get(0).x;
-            max = data.get(0).x;
+            min = 0;
+            max = 0;
         }
 
         // Find min and max
@@ -39,28 +40,43 @@ public class Axis {
                     max = p.y;
                 }
             } else if (orientation == HORIZONTAL) {
-                if (p.x < min) {
-                    min = p.x;
-                }
-                if (p.x > max) {
-                    max = p.x;
-                }
+                min = 0;
+                max = data.size() - 1;
             }
         }
 
-        double dif = max - min;
-        numOfTicks = getSignificantDigit(dif);
-        double it = 1.0;
-        if (numOfTicks < 5) {
-            it = 0.5;
-            numOfTicks *= 2;
+        if (fromZero) {
+            min = 0;
         }
-        numOfTicks += 2;
+
+        double dif = max - min;
+        double it = 1.0;
+
+        if (orientation == VERTICAL) {
+            numOfTicks = getSignificantDigit(dif);
+            if (numOfTicks < 5) {
+                it = 0.5;
+                numOfTicks *= 2;
+            }
+            numOfTicks += 2;
+        } else if (orientation == HORIZONTAL) {
+            numOfTicks = data.size();
+            tickSkip = 1;
+            while (numOfTicks > 5) {
+                tickSkip *= 2;
+                numOfTicks = numOfTicks / 2;
+            }
+            numOfTicks += 1;
+        }
 
         double log = Math.floor(Math.log10(dif));
         tickSpacing = Math.pow(10, log);
         tickSpacing *= it;
         start = Math.floor(min / tickSpacing) * tickSpacing;
+    }
+
+    public int getTickSkip() {
+        return tickSkip;
     }
 
     public double getStart() {

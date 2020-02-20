@@ -199,7 +199,7 @@ public class WorkoutActivity extends Activity {
     private Workout getWorkout(String liftName, String date) {
         Lift lift = getLift(liftName);
         for (Workout w : lift.getWorkouts()) {
-            if (w.getDate().equals(date)) {
+            if (w.getDate().toString().equals(date)) {
                 return w;
             }
         }

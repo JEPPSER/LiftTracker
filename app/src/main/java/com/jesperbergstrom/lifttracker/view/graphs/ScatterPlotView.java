@@ -8,6 +8,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class ScatterPlotView extends View {
 
@@ -61,7 +62,10 @@ public class ScatterPlotView extends View {
                 float x = (float) (PADDING + i * xInc);
                 canvas.drawRect(x, PADDING, x + 1, width, gray);
                 canvas.drawRect(x - 4, width - 20, x + 6, width + 30, white);
-                canvas.drawText(String.valueOf(xAxis.getStart() + (i - 1) * xAxis.getTickSpacing()), x, width + 100, font);
+                if (i < xAxis.getNumOfTicks()) {
+                    int index = (i - 1) * xAxis.getTickSkip();
+                    canvas.drawText(data.get(index).date.toShortString(), x - 30, width + 100, font);
+                }
             }
 
             // Draw y ticks
@@ -69,23 +73,24 @@ public class ScatterPlotView extends View {
                 float y = (float) (width - i * yInc);
                 canvas.drawRect(PADDING, y, width, y + 1, gray);
                 canvas.drawRect(PADDING - 20, y - 4, PADDING + 30, y + 6, white);
-                canvas.drawText(String.valueOf(yAxis.getStart() + (i - 1) * yAxis.getTickSpacing()), 10, y, font);
+                canvas.drawText(String.valueOf((int) (yAxis.getStart() + i * yAxis.getTickSpacing())), 10, y, font);
             }
 
             double xScale = xInc / xAxis.getTickSpacing();
             double yScale = yInc / yAxis.getTickSpacing();
 
             for (PlotPoint p : data) {
-                float pointX = (float) (PADDING + (p.x - xAxis.getStart()) * xScale + xInc);
-                float pointY = (float) (width - (p.y - yAxis.getStart()) * yScale - yInc);
+                float pointX = (float) (PADDING + ((double) data.indexOf(p) / xAxis.getTickSkip() - xAxis.getStart()) * xScale + xInc);
+                float pointY = (float) (width - (p.y - yAxis.getStart()) * yScale);
                 canvas.drawCircle(pointX, pointY, 10, white);
             }
         }
     }
 
     public void updatePlot() {
-        xAxis = new Axis(data, Axis.HORIZONTAL);
-        yAxis = new Axis(data, Axis.VERTICAL);
+        Collections.sort(data);
+        xAxis = new Axis(data, Axis.HORIZONTAL, false);
+        yAxis = new Axis(data, Axis.VERTICAL, true);
     }
 
     public ArrayList<PlotPoint> getData() {
