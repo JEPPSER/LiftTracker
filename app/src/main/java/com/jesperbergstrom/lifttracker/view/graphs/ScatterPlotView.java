@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Point;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -35,6 +36,7 @@ public class ScatterPlotView extends View {
         black.setColor(Color.BLACK);
         white = new Paint();
         white.setColor(Color.WHITE);
+        white.setStrokeWidth(3);
         gray = new Paint();
         gray.setColor(Color.GRAY);
         font = new Paint();
@@ -79,9 +81,19 @@ public class ScatterPlotView extends View {
             double xScale = xInc / xAxis.getTickSpacing();
             double yScale = yInc / yAxis.getTickSpacing();
 
+            Point prev = null;
+
             for (PlotPoint p : data) {
                 float pointX = (float) (PADDING + ((double) data.indexOf(p) / xAxis.getTickSkip() - xAxis.getStart()) * xScale + xInc);
                 float pointY = (float) (width - (p.y - yAxis.getStart()) * yScale);
+
+                if (prev == null) {
+                    prev = new Point((int) pointX, (int) pointY);
+                } else {
+                    canvas.drawLine(prev.x, prev.y, pointX, pointY, white);
+                    prev = new Point((int) pointX, (int) pointY);
+                }
+
                 canvas.drawCircle(pointX, pointY, 10, white);
             }
         }

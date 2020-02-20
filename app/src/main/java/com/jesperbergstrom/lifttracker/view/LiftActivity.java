@@ -203,7 +203,7 @@ public class LiftActivity extends AppCompatActivity {
 
     private void initSpinner() {
         String[] items = { "Volume", "Max weight", "Max reps", "Sets" };
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.spinner_item, items);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.spinner_item, items);
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -241,7 +241,6 @@ public class LiftActivity extends AppCompatActivity {
                         val = s.getWeight();
                     }
                 }
-                System.out.println(val);
             } else if (metric == 2) {
                 for (Set s : w.getSets()) {
                     if (val < s.getReps()) {
