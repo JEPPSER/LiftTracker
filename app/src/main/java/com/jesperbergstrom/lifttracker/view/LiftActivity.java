@@ -7,9 +7,12 @@ import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -32,6 +35,8 @@ import java.util.ArrayList;
 public class LiftActivity extends AppCompatActivity {
 
     private ScatterPlotView scatterPlot;
+    private Spinner spinner;
+
     private LinearLayout workoutList;
     private Button addWorkoutButton;
     private TextView liftText;
@@ -73,7 +78,10 @@ public class LiftActivity extends AppCompatActivity {
                     loadWorkouts();
                 } else if (tab.getPosition() == 1) {
                     scatterPlot = findViewById(R.id.scatterPlot);
-                    loadGraphs();
+                    spinner = findViewById(R.id.spinner);
+                    initSpinner();
+                    loadGraphs(0);
+                    scatterPlot.invalidate();
                 }
             }
 
@@ -193,7 +201,24 @@ public class LiftActivity extends AppCompatActivity {
         builder.show();
     }
 
-    private void loadGraphs() {
+    private void initSpinner() {
+        String[] items = { "Volume", "Max weight", "Max reps", "Sets" };
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.spinner_item, items);
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                loadGraphs(i);
+                scatterPlot.invalidate();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
+        });
+    }
+
+    private void loadGraphs(int metric) {
         if (scatterPlot == null) {
             return;
         }
@@ -202,16 +227,33 @@ public class LiftActivity extends AppCompatActivity {
 
         scatterPlot.getData().clear();
 
-        int i = 1;
-
         for (Workout w : getLift(liftName).getWorkouts()) {
-            double volume = 0;
-            for (Set s : w.getSets()) {
-                volume += (s.getReps() * s.getWeight());
+
+            double val = 0;
+
+            if (metric == 0) {
+                for (Set s : w.getSets()) {
+                    val += (s.getReps() * s.getWeight());
+                }
+            } else if (metric == 1) {
+                for (Set s : w.getSets()) {
+                    if (val < s.getWeight()) {
+                        val = s.getWeight();
+                    }
+                }
+                System.out.println(val);
+            } else if (metric == 2) {
+                for (Set s : w.getSets()) {
+                    if (val < s.getReps()) {
+                        val = s.getReps();
+                    }
+                }
+            } else if (metric == 3) {
+                val = w.getSets().size();
             }
-            PlotPoint p = new PlotPoint(w.getDate(), volume);
+
+            PlotPoint p = new PlotPoint(w.getDate(), val);
             scatterPlot.getData().add(p);
-            i++;
         }
 
         scatterPlot.updatePlot();
