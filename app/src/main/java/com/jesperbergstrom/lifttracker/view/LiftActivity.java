@@ -19,6 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
+import com.edmodo.rangebar.RangeBar;
 import com.google.android.material.tabs.TabLayout;
 import com.jesperbergstrom.lifttracker.R;
 import com.jesperbergstrom.lifttracker.io.FileManager;
@@ -36,6 +37,8 @@ public class LiftActivity extends AppCompatActivity {
 
     private ScatterPlotView scatterPlot;
     private Spinner spinner;
+    private RangeBar rangeBar;
+    private TextView dateText;
 
     private LinearLayout workoutList;
     private Button addWorkoutButton;
@@ -47,6 +50,9 @@ public class LiftActivity extends AppCompatActivity {
     private FileManager fileManager;
     private int selectedIndex;
     private String liftName;
+    private int fromIndex;
+    private int toIndex;
+    private int metric = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,9 +85,12 @@ public class LiftActivity extends AppCompatActivity {
                 } else if (tab.getPosition() == 1) {
                     scatterPlot = findViewById(R.id.scatterPlot);
                     spinner = findViewById(R.id.spinner);
+                    rangeBar = findViewById(R.id.rangeBar);
+                    dateText = findViewById(R.id.dateText);
+
+                    lifts = fileManager.loadAllLiftFiles();
                     initSpinner();
-                    loadGraphs(0);
-                    scatterPlot.invalidate();
+                    initRangeBar();
                 }
             }
 
@@ -97,6 +106,9 @@ public class LiftActivity extends AppCompatActivity {
         Intent intent = getIntent();
         liftName = intent.getStringExtra("name");
         liftText.setText(liftName);
+        lifts = fileManager.loadAllLiftFiles();
+        fromIndex = 0;
+        toIndex = getLift(liftName).getWorkouts().size() - 1;
     }
 
     @Override
@@ -201,6 +213,28 @@ public class LiftActivity extends AppCompatActivity {
         builder.show();
     }
 
+    private void initRangeBar() {
+        Lift lift = getLift(liftName);
+        rangeBar.setTickCount(lift.getWorkouts().size());
+
+        changeRange(fromIndex, toIndex);
+
+        rangeBar.setOnRangeBarChangeListener((rangeBar, from, to) -> {
+            changeRange(from, to);
+        });
+    }
+
+    private void changeRange(int from, int to) {
+        Lift lift = getLift(liftName);
+        Workout wFrom = lift.getWorkouts().get(from);
+        Workout wTo = lift.getWorkouts().get(to);
+        fromIndex = from;
+        toIndex = to;
+        dateText.setText(wFrom.getDate().toString() + "  to  " + wTo.getDate().toString());
+        loadGraphs(metric);
+        scatterPlot.invalidate();
+    }
+
     private void initSpinner() {
         String[] items = { "Volume", "Max weight", "Max reps", "Sets" };
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.spinner_item, items);
@@ -208,6 +242,7 @@ public class LiftActivity extends AppCompatActivity {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                metric = i;
                 loadGraphs(i);
                 scatterPlot.invalidate();
             }
@@ -227,32 +262,47 @@ public class LiftActivity extends AppCompatActivity {
 
         scatterPlot.getData().clear();
 
+        int i = 0;
+
         for (Workout w : getLift(liftName).getWorkouts()) {
+
+            if (i < fromIndex || i > toIndex) {
+                i++;
+                continue;
+            }
 
             double val = 0;
 
-            if (metric == 0) {
-                for (Set s : w.getSets()) {
-                    val += (s.getReps() * s.getWeight());
-                }
-            } else if (metric == 1) {
-                for (Set s : w.getSets()) {
-                    if (val < s.getWeight()) {
-                        val = s.getWeight();
+            switch (metric) {
+                case 0:
+                    for (Set s : w.getSets()) {
+                        val += (s.getReps() * s.getWeight());
                     }
-                }
-            } else if (metric == 2) {
-                for (Set s : w.getSets()) {
-                    if (val < s.getReps()) {
-                        val = s.getReps();
+                    break;
+                case 1:
+                    for (Set s : w.getSets()) {
+                        if (val < s.getWeight()) {
+                            val = s.getWeight();
+                        }
                     }
-                }
-            } else if (metric == 3) {
-                val = w.getSets().size();
+                    break;
+                case 2:
+                    for (Set s : w.getSets()) {
+                        if (val < s.getReps()) {
+                            val = s.getReps();
+                        }
+                    }
+                    break;
+                case 3:
+                    val = w.getSets().size();
+                    break;
+                default:
+                    break;
             }
 
             PlotPoint p = new PlotPoint(w.getDate(), val);
             scatterPlot.getData().add(p);
+            i++;
         }
 
         scatterPlot.updatePlot();
@@ -313,18 +363,6 @@ public class LiftActivity extends AppCompatActivity {
             hbox.addView(tv);
             workoutList.addView(hbox);
         }
-    }
-
-    private String dateToString(int year, int month, int day) {
-        String sM = String.valueOf(month + 1);
-        if (month < 9) {
-            sM = "0" + (month + 1);
-        }
-        String sD = String.valueOf(day);
-        if (day < 10) {
-            sD = "0" + day;
-        }
-        return year + "-" + sM + "-" + sD;
     }
 
     private Lift getLift(String name) {

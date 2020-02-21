@@ -21,6 +21,7 @@ public class ScatterPlotView extends View {
     private Paint font;
 
     private final int PADDING = 150;
+    private int width;
 
     private ArrayList<PlotPoint> data;
     private Axis xAxis;
@@ -47,10 +48,16 @@ public class ScatterPlotView extends View {
     }
 
     @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        setMeasuredDimension(widthMeasureSpec, widthMeasureSpec);
+    }
+
+    @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        int width = this.getWidth() - PADDING;
+        width = this.getWidth() - PADDING;
 
         canvas.drawRect(PADDING, PADDING, PADDING + 10, width, white);
         canvas.drawRect(PADDING, width, width, width + 10, white);
