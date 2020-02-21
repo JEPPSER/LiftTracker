@@ -10,6 +10,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -39,6 +41,7 @@ public class LiftActivity extends AppCompatActivity {
     private Spinner spinner;
     private RangeBar rangeBar;
     private TextView dateText;
+    private CheckBox checkBox;
 
     private LinearLayout workoutList;
     private Button addWorkoutButton;
@@ -87,6 +90,12 @@ public class LiftActivity extends AppCompatActivity {
                     spinner = findViewById(R.id.spinner);
                     rangeBar = findViewById(R.id.rangeBar);
                     dateText = findViewById(R.id.dateText);
+                    checkBox = findViewById(R.id.checkBox);
+
+                    checkBox.setOnCheckedChangeListener((compoundButton, b) -> {
+                        scatterPlot.setDrawLine(b);
+                        scatterPlot.invalidate();
+                    });
 
                     lifts = fileManager.loadAllLiftFiles();
                     initSpinner();

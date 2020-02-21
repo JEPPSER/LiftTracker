@@ -26,6 +26,7 @@ public class ScatterPlotView extends View {
     private ArrayList<PlotPoint> data;
     private Axis xAxis;
     private Axis yAxis;
+    private boolean drawLine = true;
 
     public ScatterPlotView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -96,7 +97,7 @@ public class ScatterPlotView extends View {
 
                 if (prev == null) {
                     prev = new Point((int) pointX, (int) pointY);
-                } else {
+                } else if (drawLine) {
                     canvas.drawLine(prev.x, prev.y, pointX, pointY, white);
                     prev = new Point((int) pointX, (int) pointY);
                 }
@@ -104,6 +105,10 @@ public class ScatterPlotView extends View {
                 canvas.drawCircle(pointX, pointY, 10, white);
             }
         }
+    }
+
+    public void setDrawLine(boolean drawLine) {
+        this.drawLine = drawLine;
     }
 
     public void updatePlot() {
