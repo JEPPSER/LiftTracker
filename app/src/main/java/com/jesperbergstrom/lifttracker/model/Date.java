@@ -3,6 +3,7 @@ package com.jesperbergstrom.lifttracker.model;
 public class Date {
 
     private final String[] MONTHS = { "null", "jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec" };
+    private final int[] NUMBER_OF_DAYS = { 0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 
     private int year;
     private int month;
@@ -14,9 +15,19 @@ public class Date {
         this.day = day;
     }
 
-    public int getYear() {
-        return year;
+    public void setYear(int year) {
+        this.year = year;
     }
+
+    public void setMonth(int month) {
+        this.month = month;
+    }
+
+    public void setDay(int day) {
+        this.day = day;
+    }
+
+    public int getYear() { return year; }
 
     public int getMonth() {
         return month;
@@ -24,6 +35,30 @@ public class Date {
 
     public int getDay() {
         return day;
+    }
+
+    public int daysTo(Date other) {
+        if (!this.isBefore(other)) {
+            return 0;
+        }
+
+        Date temp = new Date(other.year, other.month, other.day);
+
+        int count = temp.getDay();
+
+        while (!(temp.getMonth() == month && temp.getYear() == year)) {
+            temp.setMonth(temp.getMonth() - 1);
+            if (temp.getMonth() == 0) {
+                temp.setMonth(12);
+                temp.setYear(temp.getYear() - 1);
+            }
+            temp.setDay(NUMBER_OF_DAYS[temp.getMonth()]);
+            count += temp.getDay();
+        }
+
+        count -= day;
+
+        return count;
     }
 
     public boolean isBefore(Date other) {

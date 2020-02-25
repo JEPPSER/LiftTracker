@@ -2,7 +2,7 @@ package com.jesperbergstrom.lifttracker.model;
 
 import java.util.ArrayList;
 
-public class Workout {
+public class Workout implements Comparable<Workout> {
 
     private Date date;
     private ArrayList<Set> sets;
@@ -31,4 +31,16 @@ public class Workout {
     public int getDisplayIndex() { return displayIndex; }
 
     public void setDisplayIndex(int displayIndex) { this.displayIndex = displayIndex; }
+
+    @Override
+    public int compareTo(Workout workout) {
+        if (date.isBefore(workout.getDate())) {
+            return -1;
+        } else if (date.toString().equals(workout.getDate().toString())) {
+            return 0;
+        } else if (!date.isBefore(workout.getDate())) {
+            return 1;
+        }
+        return 0;
+    }
 }

@@ -8,6 +8,8 @@ import android.graphics.Point;
 import android.util.AttributeSet;
 import android.view.View;
 
+import com.jesperbergstrom.lifttracker.model.Date;
+
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -27,6 +29,7 @@ public class ScatterPlotView extends View {
     private Axis xAxis;
     private Axis yAxis;
     private boolean drawLine = true;
+    private boolean propDates = false;
 
     public ScatterPlotView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -68,13 +71,20 @@ public class ScatterPlotView extends View {
             double yInc = (double) (width - PADDING) / yAxis.getNumOfTicks();
 
             // Draw x ticks
-            for (int i = 1; i < xAxis.getNumOfTicks() + 1; i++) {
-                float x = (float) (PADDING + i * xInc);
-                canvas.drawRect(x, PADDING, x + 1, width, gray);
-                canvas.drawRect(x - 4, width - 20, x + 6, width + 30, white);
-                if (i < xAxis.getNumOfTicks()) {
-                    int index = (i - 1) * xAxis.getTickSkip();
-                    canvas.drawText(data.get(index).date.toShortString(), x - 30, width + 100, font);
+            if (propDates) {
+                canvas.drawRect(PADDING, width, PADDING + 10, width + 30, white);
+                canvas.drawText(data.get(0).date.toString(), PADDING - 100, width + 80, font);
+                canvas.drawRect(width, width - 20, width + 10, width + 30, white);
+                canvas.drawText(data.get(data.size() - 1).date.toString(), width - 100, width + 80, font);
+            } else {
+                for (int i = 1; i < xAxis.getNumOfTicks() + 1; i++) {
+                    float x = (float) (PADDING + i * xInc);
+                    canvas.drawRect(x, PADDING, x + 1, width, gray);
+                    canvas.drawRect(x - 4, width - 20, x + 6, width + 30, white);
+                    if (i < xAxis.getNumOfTicks()) {
+                        int index = (i - 1) * xAxis.getTickSkip();
+                        canvas.drawText(data.get(index).date.toShortString(), x - 30, width + 100, font);
+                    }
                 }
             }
 
@@ -90,9 +100,17 @@ public class ScatterPlotView extends View {
             double yScale = yInc / yAxis.getTickSpacing();
 
             Point prev = null;
+            Date last = data.get(data.size() - 1).date;
+            float dif = data.get(0).date.daysTo(last);
+            float scale = (width - PADDING) / dif;
 
             for (PlotPoint p : data) {
-                float pointX = (float) (PADDING + ((double) data.indexOf(p) / xAxis.getTickSkip() - xAxis.getStart()) * xScale + xInc);
+                float pointX;
+                if (propDates) {
+                    pointX = width - p.date.daysTo(last) * scale;
+                } else {
+                    pointX = (float) (PADDING + ((double) data.indexOf(p) / xAxis.getTickSkip() - xAxis.getStart()) * xScale + xInc);
+                }
                 float pointY = (float) (width - (p.y - yAxis.getStart()) * yScale);
 
                 if (prev == null) {
@@ -109,6 +127,10 @@ public class ScatterPlotView extends View {
 
     public void setDrawLine(boolean drawLine) {
         this.drawLine = drawLine;
+    }
+
+    public void setPropDates(boolean propDates) {
+        this.propDates = propDates;
     }
 
     public void updatePlot() {

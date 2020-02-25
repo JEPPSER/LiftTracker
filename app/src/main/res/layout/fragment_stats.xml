@@ -61,6 +61,16 @@
                 android:checked="true"
                 android:layout_marginTop="50px"/>
 
+            <CheckBox
+                android:id="@+id/propCheckBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Proportional dates"
+                android:textColor="#FFF"
+                android:textSize="50px"
+                android:buttonTint="#FFF"
+                android:checked="false" />
+
             <com.jesperbergstrom.lifttracker.view.graphs.ScatterPlotView
                 android:id="@+id/scatterPlot"
                 android:layout_width="match_parent"

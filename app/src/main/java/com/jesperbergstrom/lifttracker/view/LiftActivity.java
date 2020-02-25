@@ -34,6 +34,7 @@ import com.jesperbergstrom.lifttracker.view.graphs.PlotPoint;
 import com.jesperbergstrom.lifttracker.view.graphs.ScatterPlotView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class LiftActivity extends AppCompatActivity {
 
@@ -42,6 +43,7 @@ public class LiftActivity extends AppCompatActivity {
     private RangeBar rangeBar;
     private TextView dateText;
     private CheckBox checkBox;
+    private CheckBox propCheckBox;
 
     private LinearLayout workoutList;
     private Button addWorkoutButton;
@@ -91,11 +93,17 @@ public class LiftActivity extends AppCompatActivity {
                     rangeBar = findViewById(R.id.rangeBar);
                     dateText = findViewById(R.id.dateText);
                     checkBox = findViewById(R.id.checkBox);
+                    propCheckBox = findViewById(R.id.propCheckBox);
 
                     checkBox.setOnCheckedChangeListener((compoundButton, b) -> {
                         scatterPlot.setDrawLine(b);
                         scatterPlot.invalidate();
                     });
+
+                    propCheckBox.setOnCheckedChangeListener(((compoundButton, b) -> {
+                        scatterPlot.setPropDates(b);
+                        scatterPlot.invalidate();
+                    }));
 
                     lifts = fileManager.loadAllLiftFiles();
                     initSpinner();
@@ -211,6 +219,7 @@ public class LiftActivity extends AppCompatActivity {
             Workout w = new Workout();
             w.setDate(new Date(datePicker.getYear(), datePicker.getMonth() + 1, datePicker.getDayOfMonth()));
             getLift(liftName).getWorkouts().add(w);
+            Collections.sort(getLift(liftName).getWorkouts());
             fileManager.updateAllLiftFiles(lifts);
             loadWorkouts();
         });
