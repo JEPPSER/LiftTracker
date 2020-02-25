@@ -83,9 +83,21 @@ public class WorkoutActivity extends Activity {
                 fileManager.updateAllLiftFiles(lifts);
                 loadSets();
                 return true;
+            case R.id.dupSet:
+                duplicateSet(selectedIndex);
+                return true;
             default:
                 return super.onContextItemSelected(item);
         }
+    }
+
+    private void duplicateSet(int index) {
+        Workout w = getWorkout(liftName, date);
+        Set s = w.getSets().get(index);
+        Set nSet = new Set(s.getWeight(), s.getReps());
+        w.getSets().add(nSet);
+        fileManager.updateAllLiftFiles(lifts);
+        loadSets();
     }
 
     private void removeDialog() {

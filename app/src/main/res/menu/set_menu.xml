@@ -8,4 +8,8 @@
     <item
         android:id="@+id/displaySet"
         android:title="Set as display set" />
+
+    <item
+        android:id="@+id/dupSet"
+        android:title="Duplicate"/>
 </menu>
