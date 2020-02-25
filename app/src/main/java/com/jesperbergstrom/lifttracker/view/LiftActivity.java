@@ -254,7 +254,7 @@ public class LiftActivity extends AppCompatActivity {
     }
 
     private void initSpinner() {
-        String[] items = { "Volume", "Max weight", "Max reps", "Sets" };
+        String[] items = { "Volume", "Max weight", "Max reps", "Total sets", "Total reps" };
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.spinner_item, items);
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -313,6 +313,11 @@ public class LiftActivity extends AppCompatActivity {
                     break;
                 case 3:
                     val = w.getSets().size();
+                    break;
+                case 4:
+                    for (Set s : w.getSets()) {
+                        val += s.getReps();
+                    }
                     break;
                 default:
                     break;
