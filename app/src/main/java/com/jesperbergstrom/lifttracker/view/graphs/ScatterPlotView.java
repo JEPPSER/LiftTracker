@@ -104,12 +104,13 @@ public class ScatterPlotView extends View {
             float dif = data.get(0).date.daysTo(last);
             float scale = (width - PADDING) / dif;
 
+            // Draw plot points
             for (PlotPoint p : data) {
                 float pointX;
                 if (propDates) {
                     pointX = width - p.date.daysTo(last) * scale;
                 } else {
-                    pointX = (float) (PADDING + ((double) data.indexOf(p) / xAxis.getTickSkip() - xAxis.getStart()) * xScale + xInc);
+                    pointX = (float) (PADDING + (data.indexOf(p) - xAxis.getStart()) * xScale + xInc);
                 }
                 float pointY = (float) (width - (p.y - yAxis.getStart()) * yScale);
 

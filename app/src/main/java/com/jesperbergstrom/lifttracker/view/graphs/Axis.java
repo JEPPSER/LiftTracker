@@ -51,8 +51,10 @@ public class Axis {
 
         double dif = max - min;
         double it = 1.0;
+        double log = Math.floor(Math.log10(dif));
 
         if (orientation == VERTICAL) {
+            tickSpacing = Math.pow(10, log);
             numOfTicks = getSignificantDigit(dif);
             if (numOfTicks < 5) {
                 it = 0.5;
@@ -60,17 +62,17 @@ public class Axis {
             }
             numOfTicks += 2;
         } else if (orientation == HORIZONTAL) {
+            tickSpacing = 1;
             numOfTicks = data.size();
             tickSkip = 1;
             while (numOfTicks > 5) {
                 tickSkip *= 2;
-                numOfTicks = numOfTicks / 2;
+                it *= 2;
+                numOfTicks = (int) ((float) numOfTicks / 2);
             }
             numOfTicks += 1;
         }
 
-        double log = Math.floor(Math.log10(dif));
-        tickSpacing = Math.pow(10, log);
         tickSpacing *= it;
         start = Math.floor(min / tickSpacing) * tickSpacing;
     }
