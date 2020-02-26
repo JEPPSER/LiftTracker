@@ -68,7 +68,7 @@ public class Axis {
             while (numOfTicks > 5) {
                 tickSkip *= 2;
                 it *= 2;
-                numOfTicks = (int) ((float) numOfTicks / 2);
+                numOfTicks = (int) Math.ceil((float) numOfTicks / 2);
             }
             numOfTicks += 1;
         }

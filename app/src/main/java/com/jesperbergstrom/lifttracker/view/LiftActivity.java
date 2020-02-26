@@ -170,8 +170,10 @@ public class LiftActivity extends AppCompatActivity {
         builder.setView(datePicker);
 
         builder.setPositiveButton("OK", (dialog, which) -> {
-            Workout w = getLift(liftName).getWorkouts().get(selectedIndex);
+            Lift lift = getLift(liftName);
+            Workout w = lift.getWorkouts().get(selectedIndex);
             w.setDate(new Date(datePicker.getYear(), datePicker.getMonth() + 1, datePicker.getDayOfMonth()));
+            Collections.sort(lift.getWorkouts());
             fileManager.updateAllLiftFiles(lifts);
             loadWorkouts();
         });
