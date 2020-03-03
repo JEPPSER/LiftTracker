@@ -218,12 +218,18 @@ public class LiftActivity extends AppCompatActivity {
         builder.setView(datePicker);
 
         builder.setPositiveButton("OK", (dialog, which) -> {
-            Workout w = new Workout();
-            w.setDate(new Date(datePicker.getYear(), datePicker.getMonth() + 1, datePicker.getDayOfMonth()));
-            getLift(liftName).getWorkouts().add(w);
-            Collections.sort(getLift(liftName).getWorkouts());
-            fileManager.updateAllLiftFiles(lifts);
-            loadWorkouts();
+            Lift lift = getLift(liftName);
+            Date date = new Date(datePicker.getYear(), datePicker.getMonth() + 1, datePicker.getDayOfMonth());
+            if (lift.containsDate(date)) {
+                dialog.cancel();
+            } else {
+                Workout w = new Workout();
+                w.setDate(date);
+                lift.getWorkouts().add(w);
+                Collections.sort(lift.getWorkouts());
+                fileManager.updateAllLiftFiles(lifts);
+                loadWorkouts();
+            }
         });
 
         builder.setNegativeButton("Cancel", (dialog, which) -> {

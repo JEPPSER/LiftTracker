@@ -33,8 +33,13 @@ public class Date {
         return month;
     }
 
-    public int getDay() {
-        return day;
+    public int getDay() { return day; }
+
+    public boolean equals(Date other) {
+        if (this.year == other.year && this.month == other.month && this.day == other.day) {
+            return true;
+        }
+        return false;
     }
 
     public int daysTo(Date other) {

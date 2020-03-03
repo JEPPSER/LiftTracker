@@ -27,4 +27,13 @@ public class Lift {
     public void setWorkouts(ArrayList<Workout> workouts) {
         this.workouts = workouts;
     }
+
+    public boolean containsDate(Date date) {
+        for (Workout w : workouts) {
+            if (w.getDate().equals(date)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
