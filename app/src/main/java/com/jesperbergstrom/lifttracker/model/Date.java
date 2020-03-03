@@ -52,7 +52,13 @@ public class Date {
                 temp.setMonth(12);
                 temp.setYear(temp.getYear() - 1);
             }
-            temp.setDay(NUMBER_OF_DAYS[temp.getMonth()]);
+
+            if (temp.getMonth() == 2 && temp.getYear() % 4 == 0) { // Leap year
+                temp.setDay(29);
+            } else {
+                temp.setDay(NUMBER_OF_DAYS[temp.getMonth()]);
+            }
+
             count += temp.getDay();
         }
 
