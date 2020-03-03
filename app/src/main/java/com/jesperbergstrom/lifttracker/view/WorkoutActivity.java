@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.InputType;
+import android.text.method.DigitsKeyListener;
+import android.text.method.KeyListener;
 import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
@@ -132,7 +134,9 @@ public class WorkoutActivity extends Activity {
 
         EditText weight = new EditText(this);
         weight.setWidth(400);
-        weight.setRawInputType(InputType.TYPE_CLASS_NUMBER);
+        weight.setInputType(InputType.TYPE_CLASS_NUMBER);
+        KeyListener keyListener = DigitsKeyListener.getInstance("0123456789.");
+        weight.setKeyListener(keyListener);
         TextView weightText = new TextView(this);
         weightText.setText("Weight: ");
         LinearLayout l1 = new LinearLayout(this);
@@ -158,10 +162,14 @@ public class WorkoutActivity extends Activity {
         builder.setView(vbox);
 
         builder.setPositiveButton("OK", (dialog, which) -> {
-            Set set = new Set(Float.parseFloat(weight.getText().toString()), Integer.parseInt(reps.getText().toString()));
-            getWorkout(liftName, date).getSets().add(set);
-            fileManager.updateAllLiftFiles(lifts);
-            loadSets();
+            if (weight.getText().toString().isEmpty() || reps.getText().toString().isEmpty()) {
+                dialog.cancel();
+            } else {
+                Set set = new Set(Float.parseFloat(weight.getText().toString()), Integer.parseInt(reps.getText().toString()));
+                getWorkout(liftName, date).getSets().add(set);
+                fileManager.updateAllLiftFiles(lifts);
+                loadSets();
+            }
         });
 
         builder.setNegativeButton("Cancel", (dialog, which) -> {
