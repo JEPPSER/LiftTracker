@@ -94,9 +94,14 @@ public class MainActivity extends Activity {
         builder.setView(l);
 
         builder.setPositiveButton("OK", (dialog, which) -> {
-            lifts.get(selectedIndex).setName(input.getText().toString());
-            fileManager.updateAllLiftFiles(lifts);
-            loadLifts();
+            String name = input.getText().toString();
+            if (hasLift(name) || name.equals("")) {
+                dialog.cancel();
+            } else {
+                lifts.get(selectedIndex).setName(name);
+                fileManager.updateAllLiftFiles(lifts);
+                loadLifts();
+            }
         });
 
         builder.setNegativeButton("Cancel", (dialog, which) -> {
@@ -120,10 +125,15 @@ public class MainActivity extends Activity {
         builder.setView(l);
 
         builder.setPositiveButton("OK", (dialog, which) -> {
-            Lift lift = new Lift(input.getText().toString());
-            lifts.add(lift);
-            fileManager.updateAllLiftFiles(lifts);
-            loadLifts();
+            String name = input.getText().toString();
+            if (hasLift(name) || name.equals("")) {
+                dialog.cancel();
+            } else {
+                Lift lift = new Lift(name);
+                lifts.add(lift);
+                fileManager.updateAllLiftFiles(lifts);
+                loadLifts();
+            }
         });
 
         builder.setNegativeButton("Cancel", (dialog, which) -> {
@@ -190,5 +200,15 @@ public class MainActivity extends Activity {
             hbox.addView(tv);
             liftList.addView(hbox);
         }
+    }
+
+    private boolean hasLift(String name) {
+        lifts = fileManager.loadAllLiftFiles();
+        for (Lift lift : lifts) {
+            if (lift.getName().equals(name)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
