@@ -60,6 +60,9 @@ public class ScatterPlotView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        if (data.isEmpty()) {
+            return;
+        }
 
         width = this.getWidth() - PADDING;
 

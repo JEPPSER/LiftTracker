@@ -235,7 +235,12 @@ public class LiftActivity extends AppCompatActivity {
 
     private void initRangeBar() {
         Lift lift = getLift(liftName);
-        rangeBar.setTickCount(lift.getWorkouts().size());
+
+        if (lift.getWorkouts().size() < 2) {
+            rangeBar.setTickCount(2);
+        } else {
+            rangeBar.setTickCount(lift.getWorkouts().size());
+        }
 
         changeRange(fromIndex, toIndex);
 
@@ -246,6 +251,12 @@ public class LiftActivity extends AppCompatActivity {
 
     private void changeRange(int from, int to) {
         Lift lift = getLift(liftName);
+        if (lift.getWorkouts().size() == 1) {
+            from = 0;
+            to = 0;
+        } else if (lift.getWorkouts().size() == 0) {
+            return;
+        }
         Workout wFrom = lift.getWorkouts().get(from);
         Workout wTo = lift.getWorkouts().get(to);
         fromIndex = from;
