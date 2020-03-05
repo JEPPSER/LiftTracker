@@ -25,6 +25,7 @@ import com.edmodo.rangebar.RangeBar;
 import com.google.android.material.tabs.TabLayout;
 import com.jesperbergstrom.lifttracker.R;
 import com.jesperbergstrom.lifttracker.io.FileManager;
+import com.jesperbergstrom.lifttracker.io.Settings;
 import com.jesperbergstrom.lifttracker.model.Date;
 import com.jesperbergstrom.lifttracker.model.Lift;
 import com.jesperbergstrom.lifttracker.model.Set;
@@ -53,6 +54,7 @@ public class LiftActivity extends AppCompatActivity {
 
     private ArrayList<Lift> lifts;
     private FileManager fileManager;
+    private Settings settings;
     private int selectedIndex;
     private String liftName;
     private int fromIndex;
@@ -66,6 +68,7 @@ public class LiftActivity extends AppCompatActivity {
         setContentView(R.layout.activity_lift);
 
         fileManager = new FileManager(getFilesDir());
+        settings = new Settings(getFilesDir());
 
         addWorkoutButton = findViewById(R.id.addWorkoutBtn);
         liftText = findViewById(R.id.liftText);
@@ -381,10 +384,10 @@ public class LiftActivity extends AppCompatActivity {
                         show = s;
                     }
                 }
-                thumbnail = "(" + show.getWeight() + "kg x " + show.getReps() + ")";
+                thumbnail = "(" + show.getWeight() + " " + settings.getWeightUnit() + " x " + show.getReps() + ")";
             } else if (w.getDisplayIndex() != -1) {
                 Set show = w.getSets().get(w.getDisplayIndex());
-                thumbnail = "(" + show.getWeight() + "kg x " + show.getReps() + ")";
+                thumbnail = "(" + show.getWeight() + " " + settings.getWeightUnit() + " x " + show.getReps() + ")";
             }
 
             // Text

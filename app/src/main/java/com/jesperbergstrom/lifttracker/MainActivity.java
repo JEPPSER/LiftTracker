@@ -20,12 +20,14 @@ import androidx.annotation.NonNull;
 import com.jesperbergstrom.lifttracker.io.FileManager;
 import com.jesperbergstrom.lifttracker.model.Lift;
 import com.jesperbergstrom.lifttracker.view.LiftActivity;
+import com.jesperbergstrom.lifttracker.view.SettingsActivity;
 
 import java.util.ArrayList;
 
 public class MainActivity extends Activity {
 
     private Button addLiftBtn;
+    private Button settingsBtn;
     private LinearLayout liftList;
 
     private ArrayList<Lift> lifts;
@@ -42,6 +44,7 @@ public class MainActivity extends Activity {
         fileManager = new FileManager(getFilesDir());
 
         addLiftBtn = findViewById(R.id.addLiftBtn);
+        settingsBtn = findViewById(R.id.settingsBtn);
         liftList = findViewById(R.id.liftList);
 
         intent = new Intent(this, LiftActivity.class);
@@ -69,6 +72,11 @@ public class MainActivity extends Activity {
 
         addLiftBtn.setOnClickListener((view) -> {
             addLiftDialog();
+        });
+
+        settingsBtn.setOnClickListener((view) -> {
+            Intent i = new Intent(this, SettingsActivity.class);
+            startActivity(i);
         });
     }
 

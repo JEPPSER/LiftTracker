@@ -20,6 +20,7 @@ import androidx.annotation.NonNull;
 
 import com.jesperbergstrom.lifttracker.R;
 import com.jesperbergstrom.lifttracker.io.FileManager;
+import com.jesperbergstrom.lifttracker.io.Settings;
 import com.jesperbergstrom.lifttracker.model.Lift;
 import com.jesperbergstrom.lifttracker.model.Set;
 import com.jesperbergstrom.lifttracker.model.Workout;
@@ -34,6 +35,7 @@ public class WorkoutActivity extends Activity {
 
     private ArrayList<Lift> lifts;
     private FileManager fileManager;
+    private Settings settings;
     private int selectedIndex;
     private String liftName;
     private String date;
@@ -44,6 +46,7 @@ public class WorkoutActivity extends Activity {
         setContentView(R.layout.activity_workout);
 
         fileManager = new FileManager(getFilesDir());
+        settings = new Settings(getFilesDir());
 
         setList = findViewById(R.id.setList);
         addSetButton = findViewById(R.id.addSetBtn);
@@ -200,7 +203,7 @@ public class WorkoutActivity extends Activity {
 
             // Text
             TextView tv = new TextView(this);
-            String text = s.getWeight() + "kg x " + s.getReps();
+            String text = s.getWeight() + " " + settings.getWeightUnit() + " x " + s.getReps();
             if (i == w.getDisplayIndex()) {
                 text += " (display)";
             }
