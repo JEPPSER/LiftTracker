@@ -19,11 +19,16 @@
 
             <ImageView
                 android:id="@+id/imageView"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginRight="100px"
+                android:layout_height="match_parent"
+                android:layout_width="140px"
+                android:layout_weight="0"
                 android:src="@drawable/full_logo" />
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+            </FrameLayout>
 
             <Button
                 android:id="@+id/settingsBtn"
