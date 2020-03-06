@@ -143,7 +143,7 @@ public class WorkoutActivity extends Activity {
         TextView weightText = new TextView(this);
         weightText.setText("Weight: ");
         LinearLayout l1 = new LinearLayout(this);
-        l1.setPadding(60, 0, 60, 0);
+        l1.setPadding(60, 40, 60, 0);
         l1.addView(weightText);
         l1.addView(weight);
 

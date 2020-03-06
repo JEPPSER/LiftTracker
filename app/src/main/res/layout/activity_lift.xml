@@ -47,8 +47,9 @@
             android:id="@+id/tabLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#1db995"
-            app:tabMode="scrollable">
+            android:background="#111111"
+            app:tabTextColor="#FFF"
+            app:tabMode="fixed">
         </com.google.android.material.tabs.TabLayout>
 
         <androidx.viewpager.widget.ViewPager
