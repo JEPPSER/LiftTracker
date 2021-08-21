@@ -1,0 +1,25 @@
+<ion-header>
+	<ion-toolbar>
+		<ion-buttons slot="start">
+			<ion-back-button defaultHref=".."></ion-back-button>
+		</ion-buttons>
+		<ion-title>{{ exercise?.name }}</ion-title>
+		<ion-buttons slot="end">
+			<ion-button (click)="add()">
+				<ion-icon slot="icon-only" name="add-outline"></ion-icon>
+			</ion-button>
+		</ion-buttons>
+	</ion-toolbar>
+</ion-header>
+<ion-content>
+	<ion-segment [value]="state" (ionChange)="state = $event.detail.value">
+		<ion-segment-button value="workouts">Pass</ion-segment-button>
+		<ion-segment-button value="stats">Statistik</ion-segment-button>
+	</ion-segment>
+	<ng-container *ngIf="state == 'workouts'">
+		<workouts-list [workouts]="exercise.workouts" (onDeleteWorkout)="deleteWorkout($event)"></workouts-list>
+	</ng-container>
+	<ng-container *ngIf="state == 'stats'">
+
+	</ng-container>
+</ion-content>

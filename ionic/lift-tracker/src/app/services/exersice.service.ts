@@ -17,6 +17,12 @@ export class ExerciseService {
 		return list;
 	}
 
+	getExercise(exerciseId: number): Exercise {
+		let list = this.getExercises();
+		let ex = list.find(e => e.exerciseId = exerciseId);
+		return ex;
+	}
+
 	addExercise(exercise: Exercise) {
 		let list = this.getExercises();
 		exercise.workouts = [];

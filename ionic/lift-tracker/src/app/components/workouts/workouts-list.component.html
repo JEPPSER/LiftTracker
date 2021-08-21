@@ -1,0 +1,10 @@
+<ion-list>
+	<ion-item *ngFor="let w of sortWorkouts()" button detail [routerLink]="w.workoutId">
+		<ion-label>{{ w.date | date: 'mediumDate' }}: {{ getHeaviestSet(w) }}</ion-label>
+		<ion-buttons slot="end">
+			<ion-button (click)="options($event, w)">
+				<ion-icon slot="icon-only" name="ellipsis-horizontal"></ion-icon>
+			</ion-button>
+		</ion-buttons>
+	</ion-item>
+</ion-list>

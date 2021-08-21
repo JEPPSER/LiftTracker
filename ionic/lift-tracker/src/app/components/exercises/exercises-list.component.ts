@@ -1,6 +1,6 @@
 import { Component } from "@angular/core";
 import { ActionSheetController, AlertController } from "@ionic/angular";
-import { Exercise, ExerciseService } from "../services/exersice.service";
+import { Exercise, ExerciseService } from "../../services/exersice.service";
 
 @Component({
 	selector: 'exercises-list',
@@ -49,7 +49,9 @@ export class ExercisesListComponent {
 		await alert.present();
 	}
 
-	async options(ex: Exercise) {
+	async options(event, ex: Exercise) {
+		event.preventDefault();
+		event.stopPropagation();
 		const actionSheet = await this.actionSheetController.create({
 			header: ex.name,
 			cssClass: 'my-custom-class',
