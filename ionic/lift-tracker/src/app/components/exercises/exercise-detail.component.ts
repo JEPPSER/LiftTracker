@@ -1,8 +1,9 @@
-import { Component } from "@angular/core";
+import { Component, ViewChild } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { AlertController } from "@ionic/angular";
 import { WorkoutService } from "src/app/services/workout.service";
 import { Exercise, ExerciseService } from "../../services/exersice.service";
+import { PlotPoint, ScatterPlotComponent } from "../graphs/scatter-plot.component";
 
 @Component({
 	selector: 'exercise-detail',
@@ -13,7 +14,14 @@ export class ExerciseDetailComponent {
 	exercise: Exercise;
 	exerciseId: number;
 
+	data: PlotPoint[];
+
 	state: string = 'workouts';
+	drawLine: boolean = true;
+	propDates: boolean = false;
+	statProp: string = 'volume';
+
+	@ViewChild('Plot') plot: ScatterPlotComponent;
 
 	constructor(
 		private exService: ExerciseService,
@@ -26,7 +34,7 @@ export class ExerciseDetailComponent {
 		this.route.params.subscribe(params => {
 			this.exerciseId = params['exerciseId'];
 			if (this.exerciseId) {
-				this.exercise = this.exService.getExercise(this.exerciseId);
+				this.getExercise();
 			}
 		});
 	}
@@ -53,7 +61,7 @@ export class ExerciseDetailComponent {
 						if (data.date != '') {
 							let date = new Date(data.date);
 							this.workoutService.addWorkout({ exerciseId: this.exercise.exerciseId, date: date });
-							this.exercise = this.exService.getExercise(this.exerciseId);
+							this.getExercise();
 						}
 					}
 				}
@@ -64,6 +72,62 @@ export class ExerciseDetailComponent {
 
 	deleteWorkout(workout) {
 		this.workoutService.deleteWorkout(workout);
+		this.getExercise();
+	}
+
+	getExercise() {
 		this.exercise = this.exService.getExercise(this.exerciseId);
+		this.updatePlot();
+	}
+
+	updatePlot() {
+		this.data = [];
+		while (this.data.length > 0) {
+			this.data.splice(0, 1);
+		}
+
+		for (let w of this.exercise.workouts) {
+			if (this.statProp == 'volume') {
+				let volume = 0;
+				for (let s of w.sets) {
+					volume += (s.weight * s.reps);
+				}
+				let p: PlotPoint = { date: w.date, value: volume };
+				this.data.push(p);
+			} else if (this.statProp == 'maxWeight') {
+				let max = 0;
+				for (let s of w.sets) {
+					if (s.weight > max) {
+						max = s.weight;
+					}
+				}
+				let p: PlotPoint = { date: w.date, value: max };
+				this.data.push(p);
+			} else if (this.statProp == 'maxReps') {
+				let max = 0;
+				for (let s of w.sets) {
+					if (s.reps > max) {
+						max = s.reps;
+					}
+				}
+				let p: PlotPoint = { date: w.date, value: max };
+				this.data.push(p);
+			} else if (this.statProp == 'totalSets') {
+				let p: PlotPoint = { date: w.date, value: w.sets.length };
+				this.data.push(p);
+			} else if (this.statProp == 'totalReps') {
+				let val: number = 0;
+				for (let s of w.sets) {
+					val = +val + +s.reps;
+				}
+				let p: PlotPoint = { date: w.date, value: val };
+				this.data.push(p);
+			}
+		}
+
+		if (this.plot) {
+			this.plot.data = this.data;
+			this.plot.draw();
+		}
 	}
 }

@@ -1,0 +1,6 @@
+{
+	"appId": "io.ionic.starter",
+	"appName": "Lift Tracker",
+	"webDir": "www",
+	"bundledWebRuntime": false
+}

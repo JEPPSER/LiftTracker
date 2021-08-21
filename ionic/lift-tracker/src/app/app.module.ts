@@ -14,6 +14,7 @@ import { ExerciseDetailComponent } from './components/exercises/exercise-detail.
 import { WorkoutsListComponent } from './components/workouts/workouts-list.component';
 import { CommonModule } from '@angular/common';
 import { WorkoutDetailComponent } from './components/workouts/workout-detail.component';
+import { ScatterPlotComponent } from './components/graphs/scatter-plot.component';
 
 @NgModule({
 	declarations: [
@@ -21,7 +22,8 @@ import { WorkoutDetailComponent } from './components/workouts/workout-detail.com
 		ExercisesListComponent,
 		ExerciseDetailComponent,
 		WorkoutsListComponent,
-		WorkoutDetailComponent
+		WorkoutDetailComponent,
+		ScatterPlotComponent
 	],
 	entryComponents: [],
 	imports: [
