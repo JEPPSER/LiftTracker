@@ -1,0 +1,22 @@
+<ion-header>
+	<ion-toolbar>
+		<ion-title>Övningar</ion-title>
+		<ion-buttons slot="end">
+			<ion-button (click)="add()">
+				<ion-icon slot="icon-only" name="add-outline"></ion-icon>
+			</ion-button>
+		</ion-buttons>
+	</ion-toolbar>
+</ion-header>
+<ion-content>
+	<ion-list>
+		<ion-item *ngFor="let ex of exercises" button detail>
+			<ion-label>{{ ex.name }}</ion-label>
+			<ion-buttons slot="end">
+				<ion-button (click)="options(ex)">
+					<ion-icon slot="icon-only" name="ellipsis-horizontal"></ion-icon>
+				</ion-button>
+			</ion-buttons>
+		</ion-item>
+	</ion-list>
+</ion-content>

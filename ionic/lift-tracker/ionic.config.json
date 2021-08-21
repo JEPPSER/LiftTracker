@@ -1,0 +1,7 @@
+{
+  "name": "Lift Tracker",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
