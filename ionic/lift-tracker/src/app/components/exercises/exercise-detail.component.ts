@@ -97,7 +97,7 @@ export class ExerciseDetailComponent {
 			} else if (this.statProp == 'maxWeight') {
 				let max = 0;
 				for (let s of w.sets) {
-					if (s.weight > max) {
+					if (+s.weight > +max) {
 						max = s.weight;
 					}
 				}
@@ -106,7 +106,7 @@ export class ExerciseDetailComponent {
 			} else if (this.statProp == 'maxReps') {
 				let max = 0;
 				for (let s of w.sets) {
-					if (s.reps > max) {
+					if (+s.reps > +max) {
 						max = s.reps;
 					}
 				}

@@ -23,7 +23,7 @@ export class WorkoutsListComponent {
 	getHeaviestSet(workout: Workout): string {
 		let set = workout.sets[0];
 		for (let s of workout.sets) {
-			if (s.weight > set.weight) {
+			if (+s.weight > +set.weight) {
 				set = s;
 			}
 		}
