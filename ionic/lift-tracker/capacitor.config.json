@@ -1,5 +1,5 @@
 {
-	"appId": "io.ionic.starter",
+	"appId": "com.jepples.lifttracker",
 	"appName": "Lift Tracker",
 	"webDir": "www",
 	"bundledWebRuntime": false
