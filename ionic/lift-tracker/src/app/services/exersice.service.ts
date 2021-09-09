@@ -19,7 +19,7 @@ export class ExerciseService {
 
 	getExercise(exerciseId: number): Exercise {
 		let list = this.getExercises();
-		let ex = list.find(e => e.exerciseId = exerciseId);
+		let ex = list.find(e => e.exerciseId == exerciseId);
 		return ex;
 	}
 
@@ -33,7 +33,7 @@ export class ExerciseService {
 
 	deleteExercise(exerciseId: number) {
 		let list = this.getExercises();
-		let index = list.findIndex(e => e.exerciseId = exerciseId);
+		let index = list.findIndex(e => e.exerciseId == exerciseId);
 		list.splice(index, 1);
 		localStorage.setItem(this.EX_STORAGE, JSON.stringify(list));
 	}

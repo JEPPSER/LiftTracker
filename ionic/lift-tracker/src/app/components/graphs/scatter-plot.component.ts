@@ -177,10 +177,10 @@ export class Axis {
 
 		for (let p of data) {
 			if (this.orientation == this.VERTICAL) {
-				if (p.value < this.min) {
+				if (+p.value < +this.min) {
 					this.min = p.value;
 				}
-				if (p.value > this.max) {
+				if (+p.value > +this.max) {
 					this.max = p.value;
 				}
 			} else if (this.orientation == this.HORIZONTAL) {
