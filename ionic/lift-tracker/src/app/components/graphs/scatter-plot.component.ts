@@ -11,6 +11,9 @@ export class ScatterPlotComponent {
 	@Input() data: PlotPoint[];
 	@Input() drawLine: boolean = true;
 	@Input() propDates: boolean = false;
+	@Input() view: string;
+
+	weekData: PlotPoint[];
 
 	@ViewChild('canvas') canvasEl: ElementRef;
 
@@ -28,6 +31,7 @@ export class ScatterPlotComponent {
 	) {}
 
 	ngAfterViewInit() {
+		this.calculateWeekData();
 		this.canvas = this.canvasEl.nativeElement;
 		this.canvas.width = this.platform.width();
 		this.canvas.height = this.platform.width();
@@ -41,8 +45,11 @@ export class ScatterPlotComponent {
 		}
 
 		this.data = this.sortData();
-		this.xAxis = new Axis(this.data, 1, false);
-		this.yAxis = new Axis(this.data, 0, true);
+
+		let data = this.view == 'days' ? this.data : this.weekData;
+
+		this.xAxis = new Axis(data, 1, false);
+		this.yAxis = new Axis(data, 0, true);
 
 		this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 		let width = this.canvas.width - this.PADDING * 2;
@@ -58,9 +65,9 @@ export class ScatterPlotComponent {
 
 			if (this.propDates) {
 				this.context.fillRect(this.PADDING, width + this.PADDING, 5, 17);
-				this.context.strokeText(formatDate(this.data[0].date, 'MMM dd', this.locale), this.PADDING - 10, width + 80);
+				this.context.strokeText(formatDate(data[0].date, 'MMM dd', this.locale), this.PADDING - 10, width + 80);
 				this.context.fillRect(width + this.PADDING, width + this.PADDING, 5, 17);
-				this.context.strokeText(formatDate(this.data[this.data.length - 1].date, 'MMM dd', this.locale), width + this.PADDING - 10, width + 80);
+				this.context.strokeText(formatDate(data[data.length - 1].date, 'MMM dd', this.locale), width + this.PADDING - 10, width + 80);
 			} else {
 				for (let i = 1; i < this.xAxis.numOfTicks + 1; i++) {
 					let x = this.PADDING + i * xInc;
@@ -70,7 +77,11 @@ export class ScatterPlotComponent {
 					this.context.fillRect(x - 2, width + this.PADDING - 10, 5, 25);
 					if (i < this.xAxis.numOfTicks) {
 						let index = (i - 1) * this.xAxis.tickSkip;
-						this.context.strokeText(formatDate(this.data[index].date, 'MMM dd', this.locale), x - 10, width + 80);
+						if (this.view == 'days') {
+							this.context.strokeText(formatDate(data[index].date, 'MMM dd', this.locale), x - 10, width + 80);
+						} else if (this.view == 'weeks') {
+							this.context.strokeText(data[index].week, x - 5, width + 80);
+						}
 					}
 				}
 			}
@@ -88,16 +99,16 @@ export class ScatterPlotComponent {
 			let yScale = yInc / this.yAxis.tickSpacing;
 
 			let prev;
-			let last: Date = this.data[this.data.length - 1].date;
-			let dif = this.daysBetween(this.data[0].date, last);
+			let last: Date = data[data.length - 1].date;
+			let dif = this.daysBetween(data[0].date, last);
 			let scale = width / dif;
 
-			for (let p of this.data) {
+			for (let p of data) {
 				let pointX;
 				if (this.propDates) {
 					pointX = width + this.PADDING - this.daysBetween(p.date, last) * scale;
 				} else {
-					pointX = (this.PADDING + (this.data.indexOf(p) - this.xAxis.start) * xScale + xInc);
+					pointX = (this.PADDING + (data.indexOf(p) - this.xAxis.start) * xScale + xInc);
 				}
 				let pointY = (width + this.PADDING - (p.value - this.yAxis.start) * yScale);
 
@@ -140,11 +151,34 @@ export class ScatterPlotComponent {
     	);
 		return items;
 	}
+
+	calculateWeekData() {
+		this.weekData = [];
+		let data = this.sortData();
+		for (let workout of data) {
+			let week = this.getWeek(new Date(workout.date));
+			let val = this.weekData.find(w => w.week == week);
+
+			if (!val) {
+				val = { date: new Date(workout.date), value: 0, week: week };
+				this.weekData.push(val);
+			}
+			val.value = val.value + workout.value;
+		}
+	}
+
+	getWeek(date: Date): number {
+		let oneJan = new Date(date.getFullYear(), 0, 1);
+		let numberOfDays = Math.floor((date.getTime() - oneJan.getTime()) / (24 * 60 * 60 * 1000));
+		let result = Math.ceil((date.getDay() + 1 + numberOfDays) / 7);
+		return result;
+	}
 }
 
 export interface PlotPoint {
 	date: Date;
 	value: number;
+	week: number;
 }
 
 export class Axis {

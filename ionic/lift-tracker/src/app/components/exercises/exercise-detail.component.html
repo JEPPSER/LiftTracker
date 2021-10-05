@@ -20,7 +20,7 @@
 		<workouts-list [workouts]="exercise.workouts" (onDeleteWorkout)="deleteWorkout($event)"></workouts-list>
 	</ng-container>
 	<ng-container *ngIf="state == 'stats'">
-		<ion-item>
+		<ion-item [disabled]="view == 'weeks'">
 			<ion-select [value]="statProp" (ionChange)="statProp = $event.detail.value; updatePlot()">
 				<ion-select-option value="volume">Volym</ion-select-option>
 				<ion-select-option value="maxWeight">Maxvikt</ion-select-option>
@@ -33,10 +33,19 @@
 			<ion-label>Linje</ion-label>
 			<ion-toggle [checked]="drawLine" (ionChange)="drawLine = $event.detail.checked; plot.drawLine = drawLine; plot.draw()"></ion-toggle>
 		</ion-item>
-		<ion-item lines="none">
+		<ion-item lines="none" [disabled]="view == 'weeks'">
 			<ion-label>Datum avstånd</ion-label>
 			<ion-toggle [checked]="propDates" (ionChange)="propDates = $event.detail.checked; plot.propDates = propDates; plot.draw()"></ion-toggle>
 		</ion-item>
-		<scatter-plot #Plot [data]="data" [drawLine]="drawLine" [propDates]="propDates"></scatter-plot>
+		<ion-segment *ngIf="statProp == 'volume'" [value]="view" (ionChange)="onViewChanged($event)">
+			<ion-segment-button value="days">Dagar</ion-segment-button>
+			<ion-segment-button value="weeks">Veckor</ion-segment-button>
+		</ion-segment>
+		<scatter-plot #Plot
+			[view]="view"
+			[data]="data"
+			[drawLine]="drawLine"
+			[propDates]="propDates">
+		</scatter-plot>
 	</ng-container>
 </ion-content>

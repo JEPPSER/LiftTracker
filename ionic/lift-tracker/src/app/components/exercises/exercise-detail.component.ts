@@ -20,6 +20,7 @@ export class ExerciseDetailComponent {
 	drawLine: boolean = true;
 	propDates: boolean = false;
 	statProp: string = 'volume';
+	view: string = 'days';
 
 	@ViewChild('Plot') plot: ScatterPlotComponent;
 
@@ -80,11 +81,21 @@ export class ExerciseDetailComponent {
 		this.updatePlot();
 	}
 
+	onViewChanged(event) {
+		this.view = event.detail.value;
+		this.propDates = false;
+		this.plot.propDates = this.propDates;
+		this.plot.view = this.view;
+		this.plot.draw()
+	}
+
 	updatePlot() {
 		this.data = [];
 		while (this.data.length > 0) {
 			this.data.splice(0, 1);
 		}
+
+		this.view = 'days';
 
 		for (let w of this.exercise.workouts) {
 			if (this.statProp == 'volume') {
@@ -92,7 +103,7 @@ export class ExerciseDetailComponent {
 				for (let s of w.sets) {
 					volume += (s.weight * s.reps);
 				}
-				let p: PlotPoint = { date: w.date, value: volume };
+				let p: PlotPoint = { date: w.date, value: volume, week: 0 };
 				this.data.push(p);
 			} else if (this.statProp == 'maxWeight') {
 				let max = 0;
@@ -101,7 +112,7 @@ export class ExerciseDetailComponent {
 						max = s.weight;
 					}
 				}
-				let p: PlotPoint = { date: w.date, value: max };
+				let p: PlotPoint = { date: w.date, value: max, week: 0 };
 				this.data.push(p);
 			} else if (this.statProp == 'maxReps') {
 				let max = 0;
@@ -110,23 +121,24 @@ export class ExerciseDetailComponent {
 						max = s.reps;
 					}
 				}
-				let p: PlotPoint = { date: w.date, value: max };
+				let p: PlotPoint = { date: w.date, value: max, week: 0 };
 				this.data.push(p);
 			} else if (this.statProp == 'totalSets') {
-				let p: PlotPoint = { date: w.date, value: w.sets.length };
+				let p: PlotPoint = { date: w.date, value: w.sets.length, week: 0 };
 				this.data.push(p);
 			} else if (this.statProp == 'totalReps') {
 				let val: number = 0;
 				for (let s of w.sets) {
 					val = +val + +s.reps;
 				}
-				let p: PlotPoint = { date: w.date, value: val };
+				let p: PlotPoint = { date: w.date, value: val, week: 0 };
 				this.data.push(p);
 			}
 		}
 
 		if (this.plot) {
 			this.plot.data = this.data;
+			this.plot.view = this.view;
 			this.plot.draw();
 		}
 	}
