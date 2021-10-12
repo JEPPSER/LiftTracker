@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { PasteService } from './services/paste.service';
 
 @Component({
 	selector: 'app-root',
@@ -7,8 +9,10 @@ import { Component } from '@angular/core';
 export class AppComponent {
 
 	constructor(
+		private pasteService: PasteService
 	) { }
 
-	async ngOnInit() {
+	ngOnInit() {
+
 	}
 }
