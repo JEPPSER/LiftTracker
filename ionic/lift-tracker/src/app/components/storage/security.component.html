@@ -1,0 +1,19 @@
+<ion-header>
+	<ion-toolbar>
+		<ion-buttons slot="start">
+			<ion-button (click)="router.navigateByUrl('storage', { replaceUrl: true })">
+				<ion-icon name="arrow-back" slot="icon-only"></ion-icon>
+			</ion-button>
+		</ion-buttons>
+		<ion-title>Säkerhet</ion-title>
+	</ion-toolbar>
+</ion-header>
+<ion-content>
+	<ion-item>
+		<ion-label position="floating">Nyckel</ion-label>
+		<ion-input [value]="key" (ionChange)="key = $event.detail.value"></ion-input>
+	</ion-item>
+	<ion-item lines="none" (click)="update()">
+		<ion-button>Uppdatera</ion-button>
+	</ion-item>
+</ion-content>

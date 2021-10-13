@@ -17,6 +17,7 @@ import { WorkoutDetailComponent } from './components/workouts/workout-detail.com
 import { ScatterPlotComponent } from './components/graphs/scatter-plot.component';
 import { HttpClientModule } from '@angular/common/http';
 import { PasteService } from './services/paste.service';
+import { StorageComponent } from './components/storage/storage.component';
 
 @NgModule({
 	declarations: [
@@ -25,7 +26,8 @@ import { PasteService } from './services/paste.service';
 		ExerciseDetailComponent,
 		WorkoutsListComponent,
 		WorkoutDetailComponent,
-		ScatterPlotComponent
+		ScatterPlotComponent,
+		StorageComponent
 	],
 	entryComponents: [],
 	imports: [

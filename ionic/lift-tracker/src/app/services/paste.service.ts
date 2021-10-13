@@ -38,10 +38,14 @@ export class PasteService {
 						this.http.get('https://api.paste.ee/v1/pastes/' + data.id + '?key=' + this.key).subscribe(data => {
 							let content = data['paste'].sections[0]?.contents;
 							resolve(content);
+						}, error => {
+							resolve(null);
 						});
 					} else {
 						resolve(null);
 					}
+				}, error => {
+					resolve(null);
 				});
 			} else {
 				resolve(null);
@@ -63,6 +67,8 @@ export class PasteService {
 					};
 					this.http.post('https://api.paste.ee/v1/pastes?key=' + this.key, body).subscribe(res => {
 						resolve(res);
+					}, error => {
+						resolve(null);
 					});
 				});
 			} else {
