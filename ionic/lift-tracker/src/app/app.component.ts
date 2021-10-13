@@ -9,6 +9,7 @@ export class AppComponent {
 	constructor(
 	) { }
 
-	async ngOnInit() {
+	ngOnInit() {
+
 	}
 }

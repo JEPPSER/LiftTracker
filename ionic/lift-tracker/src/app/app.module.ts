@@ -15,6 +15,9 @@ import { WorkoutsListComponent } from './components/workouts/workouts-list.compo
 import { CommonModule } from '@angular/common';
 import { WorkoutDetailComponent } from './components/workouts/workout-detail.component';
 import { ScatterPlotComponent } from './components/graphs/scatter-plot.component';
+import { HttpClientModule } from '@angular/common/http';
+import { PasteService } from './services/paste.service';
+import { StorageComponent } from './components/storage/storage.component';
 
 @NgModule({
 	declarations: [
@@ -23,20 +26,23 @@ import { ScatterPlotComponent } from './components/graphs/scatter-plot.component
 		ExerciseDetailComponent,
 		WorkoutsListComponent,
 		WorkoutDetailComponent,
-		ScatterPlotComponent
+		ScatterPlotComponent,
+		StorageComponent
 	],
 	entryComponents: [],
 	imports: [
 		BrowserModule,
 		IonicModule.forRoot(),
 		AppRoutingModule,
-		CommonModule
+		CommonModule,
+		HttpClientModule
 	],
 	providers: [
 		{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
 		ExerciseService,
 		WorkoutService,
-		SetService
+		SetService,
+		PasteService
 	],
 	bootstrap: [AppComponent],
 })

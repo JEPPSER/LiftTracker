@@ -1,4 +1,5 @@
 import { Component } from "@angular/core";
+import { ActivatedRoute, Router } from "@angular/router";
 import { ActionSheetController, AlertController } from "@ionic/angular";
 import { Exercise, ExerciseService } from "../../services/exersice.service";
 
@@ -13,11 +14,15 @@ export class ExercisesListComponent {
 	constructor(
 		private exService: ExerciseService,
 		private alertController: AlertController,
-		private actionSheetController: ActionSheetController
+		private actionSheetController: ActionSheetController,
+		private router: Router,
+		private route: ActivatedRoute
 	) { }
 
 	ngOnInit() {
-		this.exercises = this.exService.getExercises();
+		this.route.params.subscribe(params => {
+			this.exercises = this.exService.getExercises();
+		});
 	}
 
 	async add() {
@@ -47,6 +52,29 @@ export class ExercisesListComponent {
 			]
 		});
 		await alert.present();
+	}
+
+	async headerOptions() {
+		const actionSheet = await this.actionSheetController.create({
+			header: 'Alternativ',
+			buttons: [
+				{
+					text: 'Lägg till övning',
+					icon: 'add',
+					handler: () => {
+						this.add();
+					}
+				},
+				{
+					text: 'Lagring',
+					icon: 'cloud-outline',
+					handler: () => {
+						this.router.navigateByUrl('storage');
+					}
+				}
+			]
+		});
+		await actionSheet.present();
 	}
 
 	async options(event, ex: Exercise) {
