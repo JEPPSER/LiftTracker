@@ -29,9 +29,18 @@
 				<ion-select-option value="totalReps">Antal reps</ion-select-option>
 			</ion-select>
 		</ion-item>
-		<ion-item lines="none">
+		<!--<ion-item lines="none">
 			<ion-label>Linje</ion-label>
 			<ion-toggle [checked]="drawLine" (ionChange)="drawLine = $event.detail.checked; plot.drawLine = drawLine; plot.draw()"></ion-toggle>
+		</ion-item>-->
+		<ion-item lines="none" [disabled]="view == 'weeks'">
+			<ion-label>Visa</ion-label>
+			<ion-select [value]="show" (ionChange)="onShowChanged($event)">
+				<ion-select-option value="10">10</ion-select-option>
+				<ion-select-option value="20">20</ion-select-option>
+				<ion-select-option value="30">30</ion-select-option>
+				<ion-select-option value="all">Alla</ion-select-option>
+			</ion-select>
 		</ion-item>
 		<ion-item lines="none" [disabled]="view == 'weeks'">
 			<ion-label>Datum avstånd</ion-label>

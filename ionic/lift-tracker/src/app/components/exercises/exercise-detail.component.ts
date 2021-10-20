@@ -20,6 +20,7 @@ export class ExerciseDetailComponent {
 	drawLine: boolean = true;
 	propDates: boolean = false;
 	statProp: string = 'volume';
+	show: string = '20';
 	view: string = 'days';
 
 	@ViewChild('Plot') plot: ScatterPlotComponent;
@@ -89,6 +90,11 @@ export class ExerciseDetailComponent {
 		this.plot.draw()
 	}
 
+	onShowChanged(event) {
+		this.show = event.detail.value;
+		this.updatePlot();
+	}
+
 	updatePlot() {
 		this.data = [];
 		while (this.data.length > 0) {
@@ -97,7 +103,17 @@ export class ExerciseDetailComponent {
 
 		this.view = 'days';
 
-		for (let w of this.exercise.workouts) {
+		let endIndex = this.exercise.workouts.length;
+
+		if (this.show != 'all') {
+			let showCount = parseInt(this.show);
+			if (this.exercise.workouts.length > showCount) {
+				endIndex = showCount;
+			}
+		}
+
+		for (let i = 0; i < endIndex; i++) {
+			let w = this.exercise.workouts[i];
 			if (this.statProp == 'volume') {
 				let volume = 0;
 				for (let s of w.sets) {
