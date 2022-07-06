@@ -1,6 +1,8 @@
 import { Component, ViewChild } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { AlertController } from "@ionic/angular";
+import { FormService } from "src/app/services/form.service";
+import { Set } from "src/app/services/set.service";
 import { WorkoutService } from "src/app/services/workout.service";
 import { Exercise, ExerciseService } from "../../services/exersice.service";
 import { PlotPoint, ScatterPlotComponent } from "../graphs/scatter-plot.component";
@@ -12,7 +14,7 @@ import { PlotPoint, ScatterPlotComponent } from "../graphs/scatter-plot.componen
 export class ExerciseDetailComponent {
 
 	exercise: Exercise;
-	exerciseId: number;
+	exerciseId: string;
 
 	data: PlotPoint[];
 
@@ -29,12 +31,14 @@ export class ExerciseDetailComponent {
 		private exService: ExerciseService,
 		private route: ActivatedRoute,
 		private alertController: AlertController,
-		private workoutService: WorkoutService
+		private workoutService: WorkoutService,
+		private formService: FormService
 	) {}
 
 	ngOnInit() {
 		this.route.params.subscribe(params => {
 			this.exerciseId = params['exerciseId'];
+			console.log(this.exerciseId);
 			if (this.exerciseId) {
 				this.getExercise();
 			}
@@ -78,8 +82,37 @@ export class ExerciseDetailComponent {
 	}
 
 	getExercise() {
-		this.exercise = this.exService.getExercise(this.exerciseId);
-		this.updatePlot();
+		let formGuid = localStorage.getItem('pasteKey');
+		if (formGuid) {
+			this.formService.getFormContent(formGuid).subscribe(res => {
+				let workouts = [];
+				for (let set of res) {
+					let dateStr = set.values.find(v => v.formFieldId == 408687)?.value;
+					if (dateStr) {
+						let temp = new Date(dateStr);
+						let date = new Date(temp.getFullYear(), temp.getMonth(), temp.getDate());
+						let workoutId = date.toISOString();
+						let workout = workouts.find(w => w.workoutId == workoutId);
+
+						let wSet: Set = {
+							weight: set.values.find(v => v.formFieldId == 408689)?.value,
+							reps: set.values.find(v => v.formFieldId == 408690)?.value,
+							workoutId: workoutId
+						};
+
+						if (!workout) {
+							workouts.push({ date: date, workoutId: workoutId, sets: [ wSet ] });
+						} else {
+							workout.sets.push()
+						}
+					}
+				}
+				this.exercise = { workouts: workouts, name: decodeURIComponent(this.exerciseId) };
+				console.log(workouts);
+			});
+		}
+		/*this.exercise = this.exService.getExercise(this.exerciseId);
+		this.updatePlot();*/
 	}
 
 	onViewChanged(event) {

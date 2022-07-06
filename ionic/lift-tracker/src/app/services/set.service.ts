@@ -78,7 +78,7 @@ export class SetService {
 
 export interface Set {
 	setId?: number;
-	workoutId: number;
+	workoutId: string;
 	reps: number;
 	weight: number;
 }

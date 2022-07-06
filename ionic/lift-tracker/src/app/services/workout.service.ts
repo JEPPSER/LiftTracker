@@ -11,7 +11,7 @@ export class WorkoutService {
 		private exService: ExerciseService
 	) {}
 
-	getWorkout(workoutId: number): Workout {
+	getWorkout(workoutId: string): Workout {
 		let list = this.exService.getExercises();
 		let workout;
 		for (let ex of list) {
@@ -27,7 +27,7 @@ export class WorkoutService {
 		let list = this.exService.getExercises();
 		let ex = list.find(e => e.exerciseId == workout.exerciseId);
 		workout.sets = [];
-		workout.workoutId = this.getNewId();
+		//workout.workoutId = this.getNewId();
 		ex.workouts.push(workout);
 		localStorage.setItem(this.EX_STORAGE, JSON.stringify(list));
 	}
@@ -45,9 +45,9 @@ export class WorkoutService {
 		let max = 0;
 		for (let l of list) {
 			for (let w of l.workouts) {
-				if (w.workoutId > max) {
+				/*if (w.workoutId > max) {
 					max = w.workoutId;
-				}
+				}*/
 			}
 		}
 		return max + 1;
@@ -55,8 +55,8 @@ export class WorkoutService {
 }
 
 export interface Workout {
-	workoutId?: number;
-	exerciseId: number;
+	workoutId?: string;
+	exerciseId: string;
 	date: Date;
 	sets?: Set[];
 }

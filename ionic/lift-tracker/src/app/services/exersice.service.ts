@@ -17,7 +17,7 @@ export class ExerciseService {
 		return list;
 	}
 
-	getExercise(exerciseId: number): Exercise {
+	getExercise(exerciseId: string): Exercise {
 		let list = this.getExercises();
 		let ex = list.find(e => e.exerciseId == exerciseId);
 		return ex;
@@ -26,12 +26,12 @@ export class ExerciseService {
 	addExercise(exercise: Exercise) {
 		let list = this.getExercises();
 		exercise.workouts = [];
-		exercise.exerciseId = this.getNewId();
+		//exercise.exerciseId = this.getNewId();
 		list.push(exercise);
 		localStorage.setItem(this.EX_STORAGE, JSON.stringify(list));
 	}
 
-	deleteExercise(exerciseId: number) {
+	deleteExercise(exerciseId: string) {
 		let list = this.getExercises();
 		let index = list.findIndex(e => e.exerciseId == exerciseId);
 		list.splice(index, 1);
@@ -42,16 +42,16 @@ export class ExerciseService {
 		let list = this.getExercises();
 		let max = 0;
 		for (let l of list) {
-			if (l.exerciseId > max) {
+			/*if (l.exerciseId > max) {
 				max = l.exerciseId;
-			}
+			}*/
 		}
 		return max + 1;
 	}
 }
 
 export interface Exercise {
-	exerciseId?: number;
+	exerciseId?: string;
 	name: string;
 	workouts?: Workout[];
 }

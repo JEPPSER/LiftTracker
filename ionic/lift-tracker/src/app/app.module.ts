@@ -18,6 +18,8 @@ import { ScatterPlotComponent } from './components/graphs/scatter-plot.component
 import { HttpClientModule } from '@angular/common/http';
 import { PasteService } from './services/paste.service';
 import { StorageComponent } from './components/storage/storage.component';
+import { AuthService } from './services/auth.service';
+import { FormService } from './services/form.service';
 
 @NgModule({
 	declarations: [
@@ -42,7 +44,9 @@ import { StorageComponent } from './components/storage/storage.component';
 		ExerciseService,
 		WorkoutService,
 		SetService,
-		PasteService
+		PasteService,
+		AuthService,
+		FormService
 	],
 	bootstrap: [AppComponent],
 })

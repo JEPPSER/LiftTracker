@@ -12,7 +12,7 @@ import { Set } from "src/app/services/set.service";
 export class WorkoutDetailComponent {
 
 	workout: Workout;
-	workoutId: number;
+	workoutId: string;
 
 	constructor(
 		private route: ActivatedRoute,

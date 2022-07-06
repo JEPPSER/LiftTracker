@@ -5,19 +5,27 @@ import { ExercisesListComponent } from './components/exercises/exercises-list.co
 import { SecurityComponent } from './components/storage/security.component';
 import { StorageComponent } from './components/storage/storage.component';
 import { WorkoutDetailComponent } from './components/workouts/workout-detail.component';
+import { AppResolverService } from './services/app-resolver.service';
 
 const routes: Routes = [
-	{ path: '', component: ExercisesListComponent },
-	{ path: 'storage', component: StorageComponent },
-	{ path: 'storage/security', component: SecurityComponent },
-	{ path: ':exerciseId', component: ExerciseDetailComponent },
-	{ path: ':exerciseId/:workoutId', component: WorkoutDetailComponent }
+	{
+		path: '',
+		canActivate: [AppResolverService],
+		children: [
+			{ path: '', component: ExercisesListComponent },
+			{ path: 'storage', component: StorageComponent },
+			{ path: 'storage/security', component: SecurityComponent },
+			{ path: ':exerciseId', component: ExerciseDetailComponent },
+			{ path: ':exerciseId/:workoutId', component: WorkoutDetailComponent }
+		]
+	}
 ];
 
 @NgModule({
 	imports: [
 		RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules })
 	],
-	exports: [RouterModule]
+	exports: [RouterModule],
+	providers: [AppResolverService]
 })
 export class AppRoutingModule { }

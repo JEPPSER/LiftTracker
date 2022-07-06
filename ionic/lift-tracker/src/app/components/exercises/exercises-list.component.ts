@@ -1,6 +1,9 @@
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Component } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { ActionSheetController, AlertController } from "@ionic/angular";
+import { AuthService } from "src/app/services/auth.service";
+import { FormService } from "src/app/services/form.service";
 import { Exercise, ExerciseService } from "../../services/exersice.service";
 
 @Component({
@@ -16,12 +19,28 @@ export class ExercisesListComponent {
 		private alertController: AlertController,
 		private actionSheetController: ActionSheetController,
 		private router: Router,
-		private route: ActivatedRoute
+		private route: ActivatedRoute,
+		private http: HttpClient,
+		private authService: AuthService,
+		private formService: FormService
 	) { }
 
 	ngOnInit() {
 		this.route.params.subscribe(params => {
-			this.exercises = this.exService.getExercises();
+			let formGuid = localStorage.getItem('pasteKey');
+			if (formGuid) {
+				this.formService.getFormContent(formGuid).subscribe((res: any[]) => {
+					this.exercises = [];
+					for (let set of res) {
+						let e = set.values.find(v => v.formFieldId == 408688);
+						if (e) {
+							if (this.exercises.findIndex(ex => ex.name == e.value) == -1) {
+								this.exercises.push({ name: e.value, exerciseId: encodeURIComponent(e.value) });
+							}
+						}
+					}
+				});
+			}
 		});
 	}
 
