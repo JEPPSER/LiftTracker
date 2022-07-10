@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { ActionSheetController, AlertController } from "@ionic/angular";
 import { SetService } from "src/app/services/set.service";
 import { Workout, WorkoutService } from "src/app/services/workout.service";
@@ -26,7 +26,8 @@ export class WorkoutDetailComponent {
 		private alertController: AlertController,
 		private setService: SetService,
 		private actionSheetController: ActionSheetController,
-		private formService: FormService
+		private formService: FormService,
+		private router: Router
 	) {}
 
 	ngOnInit() {
@@ -37,22 +38,32 @@ export class WorkoutDetailComponent {
 
 			if (this.workoutId && this.formGuid) {
 				//this.workout = this.workoutService.getWorkout(this.workoutId);
-				this.isLoading = true;
-				let filter = '[{"term":"{\\"startDate\\":\\"' + this.workoutId + '\\",\\"endDate\\":\\"' + this.workoutId + '\\"}","filterType":"=<within>","field":{"formFieldId":408687,"fieldType":6}}]';
-				this.formService.getFormContent(this.formGuid).subscribe(res => {
-					this.isLoading = false;
-					this.workout = { exerciseId: this.excerciseId, workoutId: this.workoutId, date: new Date(this.workoutId) };
+				if (!this.workoutId.startsWith('create_')) {
+					this.getSets();
+				} else {
+					let date = this.workoutId.replace('create_', '');
+					this.workout = { exerciseId: this.excerciseId, workoutId: date, date: new Date(date) };
 					this.workout.sets = [];
-					let time = new Date(this.workoutId).getTime()
-					res = res.filter(r => new Date(r.values.find(v => v.formFieldId == 408687)?.value).getTime() == time);
+				}
+			}
+		});
+	}
 
-					for (let r of res) {
-						this.workout.sets.push({
-							workoutId: this.workoutId,
-							weight: r.values.find(v => v.formFieldId == 408689)?.value,
-							reps: r.values.find(v => v.formFieldId == 408690)?.value
-						});
-					}
+	getSets() {
+		this.isLoading = true;
+		let filter = '[{"term":"{\\"startDate\\":\\"' + this.workoutId + '\\",\\"endDate\\":\\"' + this.workoutId + '\\"}","filterType":"=<within>","field":{"formFieldId":408687,"fieldType":6}}]';
+		this.formService.getFormContent(this.formGuid).subscribe(res => {
+			this.isLoading = false;
+			this.workout = { exerciseId: this.excerciseId, workoutId: this.workoutId, date: new Date(this.workoutId) };
+			this.workout.sets = [];
+			let time = new Date(this.workoutId).getTime();
+			res = res.filter(r => new Date(r.values.find(v => v.formFieldId == 408687)?.value).getTime() == time);
+
+			for (let r of res) {
+				this.workout.sets.push({
+					workoutId: this.workoutId,
+					weight: r.values.find(v => v.formFieldId == 408689)?.value,
+					reps: r.values.find(v => v.formFieldId == 408690)?.value
 				});
 			}
 		});
@@ -82,8 +93,38 @@ export class WorkoutDetailComponent {
 				}, {
 					text: 'OK',
 					handler: (data) => {
-						this.setService.addSet({ workoutId: this.workoutId, reps: data.reps, weight: data.weight });
-						this.workout = this.workoutService.getWorkout(this.workoutId);
+						let content = {
+							formContentId: 0,
+							formId: 19182,
+							values: [
+								{
+									formContentValueId: 0,
+									formFieldId: 408687,
+									value: this.workout.date.toISOString()
+								},
+								{
+									formContentValueId: 0,
+									formFieldId: 408688,
+									value: decodeURIComponent(this.excerciseId)
+								},
+								{
+									formContentValueId: 0,
+									formFieldId: 408689,
+									value: data.weight
+								},
+								{
+									formContentValueId: 0,
+									formFieldId: 408690,
+									value: data.reps
+								}
+							]
+						}
+						this.formService.postFormContent(content).subscribe(res => {
+							this.router.navigateByUrl(this.router.url.replace('create_', ''), { replaceUrl: true });
+							this.getSets();
+						});
+						//this.setService.addSet({ workoutId: this.workoutId, reps: data.reps, weight: data.weight });
+						//this.workout = this.workoutService.getWorkout(this.workoutId);
 					}
 				}
 			]

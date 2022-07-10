@@ -1,9 +1,9 @@
 import { Component, ViewChild } from "@angular/core";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { AlertController } from "@ionic/angular";
 import { FormService } from "src/app/services/form.service";
 import { Set } from "src/app/services/set.service";
-import { WorkoutService } from "src/app/services/workout.service";
+import { Workout, WorkoutService } from "src/app/services/workout.service";
 import { Exercise, ExerciseService } from "../../services/exersice.service";
 import { PlotPoint, ScatterPlotComponent } from "../graphs/scatter-plot.component";
 
@@ -32,7 +32,8 @@ export class ExerciseDetailComponent {
 		private route: ActivatedRoute,
 		private alertController: AlertController,
 		private workoutService: WorkoutService,
-		private formService: FormService
+		private formService: FormService,
+		private router: Router
 	) {}
 
 	ngOnInit() {
@@ -65,8 +66,10 @@ export class ExerciseDetailComponent {
 					handler: (data) => {
 						if (data.date != '') {
 							let date = new Date(data.date);
-							this.workoutService.addWorkout({ exerciseId: this.exercise.exerciseId, date: date });
-							this.getExercise();
+							this.router.navigateByUrl(this.router.url + '/create_' + date.toISOString());
+							//let workout: Workout = { exerciseId: this.exercise.exerciseId, date: date };
+							//this.workoutService.addWorkout({ exerciseId: this.exercise.exerciseId, date: date });
+							//this.getExercise();
 						}
 					}
 				}
@@ -102,15 +105,15 @@ export class ExerciseDetailComponent {
 						if (!workout) {
 							workouts.push({ date: date, workoutId: workoutId, sets: [ wSet ] });
 						} else {
-							workout.sets.push()
+							workout.sets.push(wSet);
 						}
 					}
 				}
 				this.exercise = { workouts: workouts, name: decodeURIComponent(this.exerciseId) };
+				this.updatePlot();
 			});
 		}
-		/*this.exercise = this.exService.getExercise(this.exerciseId);
-		this.updatePlot();*/
+		//this.exercise = this.exService.getExercise(this.exerciseId);
 	}
 
 	onViewChanged(event) {
