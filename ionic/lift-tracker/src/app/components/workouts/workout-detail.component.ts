@@ -4,6 +4,7 @@ import { ActionSheetController, AlertController } from "@ionic/angular";
 import { SetService } from "src/app/services/set.service";
 import { Workout, WorkoutService } from "src/app/services/workout.service";
 import { Set } from "src/app/services/set.service";
+import { FormService } from "src/app/services/form.service";
 
 @Component({
 	selector: 'workout-detail',
@@ -13,20 +14,46 @@ export class WorkoutDetailComponent {
 
 	workout: Workout;
 	workoutId: string;
+	excerciseId: string;
+
+	formGuid: string;
+
+	isLoading: boolean;
 
 	constructor(
 		private route: ActivatedRoute,
 		private workoutService: WorkoutService,
 		private alertController: AlertController,
 		private setService: SetService,
-		private actionSheetController: ActionSheetController
+		private actionSheetController: ActionSheetController,
+		private formService: FormService
 	) {}
 
 	ngOnInit() {
 		this.route.params.subscribe(params => {
 			this.workoutId = params['workoutId'];
-			if (this.workoutId) {
-				this.workout = this.workoutService.getWorkout(this.workoutId);
+			this.excerciseId = params['excerciseId'];
+			this.formGuid = localStorage.getItem('pasteKey');
+
+			if (this.workoutId && this.formGuid) {
+				//this.workout = this.workoutService.getWorkout(this.workoutId);
+				this.isLoading = true;
+				let filter = '[{"term":"{\\"startDate\\":\\"' + this.workoutId + '\\",\\"endDate\\":\\"' + this.workoutId + '\\"}","filterType":"=<within>","field":{"formFieldId":408687,"fieldType":6}}]';
+				this.formService.getFormContent(this.formGuid).subscribe(res => {
+					this.isLoading = false;
+					this.workout = { exerciseId: this.excerciseId, workoutId: this.workoutId, date: new Date(this.workoutId) };
+					this.workout.sets = [];
+					let time = new Date(this.workoutId).getTime()
+					res = res.filter(r => new Date(r.values.find(v => v.formFieldId == 408687)?.value).getTime() == time);
+
+					for (let r of res) {
+						this.workout.sets.push({
+							workoutId: this.workoutId,
+							weight: r.values.find(v => v.formFieldId == 408689)?.value,
+							reps: r.values.find(v => v.formFieldId == 408690)?.value
+						});
+					}
+				});
 			}
 		});
 	}

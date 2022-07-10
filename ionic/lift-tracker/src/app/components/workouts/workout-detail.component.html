@@ -12,7 +12,8 @@
 	</ion-toolbar>
 </ion-header>
 <ion-content>
-	<ion-list>
+	<ion-spinner *ngIf="isLoading" style="left: calc(50% - 10px); top: 15px"></ion-spinner>
+	<ion-list *ngIf="!isLoading && workout">
 		<ion-item *ngFor="let set of workout.sets" button>
 			<ion-label>{{ set.weight + ' kg x ' + set.reps }}</ion-label>
 			<ion-buttons slot="end">

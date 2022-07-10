@@ -38,7 +38,6 @@ export class ExerciseDetailComponent {
 	ngOnInit() {
 		this.route.params.subscribe(params => {
 			this.exerciseId = params['exerciseId'];
-			console.log(this.exerciseId);
 			if (this.exerciseId) {
 				this.getExercise();
 			}
@@ -108,7 +107,6 @@ export class ExerciseDetailComponent {
 					}
 				}
 				this.exercise = { workouts: workouts, name: decodeURIComponent(this.exerciseId) };
-				console.log(workouts);
 			});
 		}
 		/*this.exercise = this.exService.getExercise(this.exerciseId);
