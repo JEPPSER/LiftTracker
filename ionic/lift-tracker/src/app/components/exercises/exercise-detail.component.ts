@@ -66,6 +66,9 @@ export class ExerciseDetailComponent {
 					handler: (data) => {
 						if (data.date != '') {
 							let date = new Date(data.date);
+							date.setHours(0);
+							date.setMinutes(0);
+							date.setMilliseconds(0);
 							this.router.navigateByUrl(this.router.url + '/create_' + date.toISOString());
 							//let workout: Workout = { exerciseId: this.exercise.exerciseId, date: date };
 							//this.workoutService.addWorkout({ exerciseId: this.exercise.exerciseId, date: date });

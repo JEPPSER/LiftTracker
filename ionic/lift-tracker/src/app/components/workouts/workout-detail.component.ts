@@ -14,7 +14,7 @@ export class WorkoutDetailComponent {
 
 	workout: Workout;
 	workoutId: string;
-	excerciseId: string;
+	exerciseId: string;
 
 	formGuid: string;
 
@@ -28,12 +28,12 @@ export class WorkoutDetailComponent {
 		private actionSheetController: ActionSheetController,
 		private formService: FormService,
 		private router: Router
-	) {}
+	) { }
 
 	ngOnInit() {
 		this.route.params.subscribe(params => {
 			this.workoutId = params['workoutId'];
-			this.excerciseId = params['excerciseId'];
+			this.exerciseId = params['exerciseId'];
 			this.formGuid = localStorage.getItem('pasteKey');
 
 			if (this.workoutId && this.formGuid) {
@@ -42,7 +42,7 @@ export class WorkoutDetailComponent {
 					this.getSets();
 				} else {
 					let date = this.workoutId.replace('create_', '');
-					this.workout = { exerciseId: this.excerciseId, workoutId: date, date: new Date(date) };
+					this.workout = { exerciseId: this.exerciseId, workoutId: date, date: new Date(date) };
 					this.workout.sets = [];
 				}
 			}
@@ -54,10 +54,10 @@ export class WorkoutDetailComponent {
 		let filter = '[{"term":"{\\"startDate\\":\\"' + this.workoutId + '\\",\\"endDate\\":\\"' + this.workoutId + '\\"}","filterType":"=<within>","field":{"formFieldId":408687,"fieldType":6}}]';
 		this.formService.getFormContent(this.formGuid).subscribe(res => {
 			this.isLoading = false;
-			this.workout = { exerciseId: this.excerciseId, workoutId: this.workoutId, date: new Date(this.workoutId) };
+			this.workout = { exerciseId: this.exerciseId, workoutId: this.workoutId, date: new Date(this.workoutId) };
 			this.workout.sets = [];
 			let time = new Date(this.workoutId).getTime();
-			res = res.filter(r => new Date(r.values.find(v => v.formFieldId == 408687)?.value).getTime() == time);
+			res = res.filter(r => r.values.find(v => v.formFieldId == 408688)?.value == decodeURIComponent(this.exerciseId) && new Date(r.values.find(v => v.formFieldId == 408687)?.value).getTime() == time);
 
 			for (let r of res) {
 				this.workout.sets.push({
@@ -93,43 +93,47 @@ export class WorkoutDetailComponent {
 				}, {
 					text: 'OK',
 					handler: (data) => {
-						let content = {
-							formContentId: 0,
-							formId: 19182,
-							values: [
-								{
-									formContentValueId: 0,
-									formFieldId: 408687,
-									value: this.workout.date.toISOString()
-								},
-								{
-									formContentValueId: 0,
-									formFieldId: 408688,
-									value: decodeURIComponent(this.excerciseId)
-								},
-								{
-									formContentValueId: 0,
-									formFieldId: 408689,
-									value: data.weight
-								},
-								{
-									formContentValueId: 0,
-									formFieldId: 408690,
-									value: data.reps
-								}
-							]
-						}
-						this.formService.postFormContent(content).subscribe(res => {
-							this.router.navigateByUrl(this.router.url.replace('create_', ''), { replaceUrl: true });
-							this.getSets();
-						});
-						//this.setService.addSet({ workoutId: this.workoutId, reps: data.reps, weight: data.weight });
-						//this.workout = this.workoutService.getWorkout(this.workoutId);
+						this.postSet(data.weight, data.reps)
 					}
 				}
 			]
 		});
 		await alert.present();
+	}
+
+	postSet(weight, reps) {
+		let date = this.workout.workoutId;
+		let ex = decodeURIComponent(this.exerciseId);
+		let content = {
+			formContentId: 0,
+			formId: 19182,
+			values: [
+				{
+					formContentValueId: 0,
+					formFieldId: 408687,
+					value: date
+				},
+				{
+					formContentValueId: 0,
+					formFieldId: 408688,
+					value: ex
+				},
+				{
+					formContentValueId: 0,
+					formFieldId: 408689,
+					value: weight
+				},
+				{
+					formContentValueId: 0,
+					formFieldId: 408690,
+					value: reps
+				}
+			]
+		}
+		this.formService.postFormContent(content).subscribe(res => {
+			this.router.navigateByUrl(this.router.url.replace('create_', ''), { replaceUrl: true });
+			this.getSets();
+		});
 	}
 
 	async options(event, set: Set) {
@@ -141,10 +145,11 @@ export class WorkoutDetailComponent {
 				text: 'Kopiera',
 				icon: 'copy',
 				handler: () => {
-					this.setService.copySet(set);
-					this.workout = this.workoutService.getWorkout(this.workoutId);
+					this.postSet(set.weight, set.reps);
+					//this.setService.copySet(set);
+					//this.workout = this.workoutService.getWorkout(this.workoutId);
 				}
-			},{
+			}, {
 				text: 'Ta bort',
 				role: 'destructive',
 				icon: 'trash',
