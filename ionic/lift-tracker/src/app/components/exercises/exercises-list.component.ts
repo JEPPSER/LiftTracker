@@ -77,13 +77,13 @@ export class ExercisesListComponent {
 		const actionSheet = await this.actionSheetController.create({
 			header: 'Alternativ',
 			buttons: [
-				{
+				/*{
 					text: 'Lägg till övning',
 					icon: 'add',
 					handler: () => {
 						this.add();
 					}
-				},
+				},*/
 				{
 					text: 'Lagring',
 					icon: 'cloud-outline',

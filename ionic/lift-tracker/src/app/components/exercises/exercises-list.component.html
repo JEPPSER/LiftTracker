@@ -12,11 +12,11 @@
 	<ion-list>
 		<ion-item *ngFor="let ex of exercises" button detail [routerLink]="ex.exerciseId">
 			<ion-label>{{ ex.name }}</ion-label>
-			<ion-buttons slot="end">
+			<!--<ion-buttons slot="end">
 				<ion-button (click)="options($event, ex)">
 					<ion-icon slot="icon-only" name="ellipsis-horizontal"></ion-icon>
 				</ion-button>
-			</ion-buttons>
+			</ion-buttons>-->
 		</ion-item>
 	</ion-list>
 </ion-content>

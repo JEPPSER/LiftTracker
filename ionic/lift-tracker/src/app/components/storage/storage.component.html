@@ -16,7 +16,7 @@
 </ion-header>
 <ion-content>
 	<ion-progress-bar *ngIf="isLoading" type="indeterminate"></ion-progress-bar>
-	<ng-container *ngIf="!isLoading && !error">
+	<ng-container *ngIf="!isLoading && !error && false">
 		<ion-segment [value]="state" (ionChange)="state = $event.detail.value">
 			<ion-segment-button value="data">Data</ion-segment-button>
 			<ion-segment-button value="backup">Backup</ion-segment-button>
@@ -25,7 +25,7 @@
 		<pre *ngIf="state == 'backup'">{{ backup | json }}</pre>
 	</ng-container>
 </ion-content>
-<ion-footer *ngIf="!isLoading && !error">
+<ion-footer *ngIf="!isLoading && !error && false">
 	<ion-toolbar>
 		<ion-buttons slot="start">
 			<ion-button fill="solid" color="primary" (click)="updateAlert()">

@@ -1,6 +1,6 @@
 {
-	"appId": "com.jepples.lifttracker",
-	"appName": "Lift Tracker",
+	"appId": "com.jepples.lifttracker2",
+	"appName": "Lift Tracker 2.0",
 	"webDir": "www",
 	"bundledWebRuntime": false
 }

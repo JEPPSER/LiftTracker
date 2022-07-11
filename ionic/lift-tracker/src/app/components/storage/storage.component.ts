@@ -35,7 +35,7 @@ export class StorageComponent {
 	ngOnInit() {
 		this.route.params.subscribe(params => {
 			this.error = false;
-			this.getData();
+			//this.getData();
 		});
 	}
 
