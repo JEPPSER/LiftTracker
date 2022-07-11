@@ -63,7 +63,8 @@ export class WorkoutDetailComponent {
 				this.workout.sets.push({
 					workoutId: this.workoutId,
 					weight: r.values.find(v => v.formFieldId == 408689)?.value,
-					reps: r.values.find(v => v.formFieldId == 408690)?.value
+					reps: r.values.find(v => v.formFieldId == 408690)?.value,
+					formContentGuid: r.formContentGuid
 				});
 			}
 		});
@@ -180,8 +181,11 @@ export class WorkoutDetailComponent {
 				}, {
 					text: 'OK',
 					handler: () => {
-						this.setService.deleteSet(set);
-						this.workout = this.workoutService.getWorkout(this.workoutId);
+						this.formService.deleteFormContent(set.formContentGuid).subscribe(res => {
+							this.getSets();
+						});
+						//this.setService.deleteSet(set);
+						//this.workout = this.workoutService.getWorkout(this.workoutId);
 					}
 				}
 			]

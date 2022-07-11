@@ -81,4 +81,5 @@ export interface Set {
 	workoutId: string;
 	reps: number;
 	weight: number;
+	formContentGuid?: string;
 }

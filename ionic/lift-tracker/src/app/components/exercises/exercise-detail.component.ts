@@ -81,9 +81,22 @@ export class ExerciseDetailComponent {
 		await alert.present();
 	}
 
-	deleteWorkout(workout) {
-		this.workoutService.deleteWorkout(workout);
+	async deleteWorkout(workout) {
+		//this.workoutService.deleteWorkout(workout);
+		for (let set of workout.sets) {
+			await this.deleteSet(set.formContentGuid);
+		}
 		this.getExercise();
+	}
+
+	deleteSet(guid): Promise<void> {
+		return new Promise<void>(resolve => {
+			this.formService.deleteFormContent(guid).subscribe(res => {
+				resolve();
+			}, err => {
+				resolve();
+			});
+		});
 	}
 
 	getExercise() {
@@ -102,7 +115,8 @@ export class ExerciseDetailComponent {
 						let wSet: Set = {
 							weight: set.values.find(v => v.formFieldId == 408689)?.value,
 							reps: set.values.find(v => v.formFieldId == 408690)?.value,
-							workoutId: workoutId
+							workoutId: workoutId,
+							formContentGuid: set.formContentGuid
 						};
 
 						if (!workout) {
